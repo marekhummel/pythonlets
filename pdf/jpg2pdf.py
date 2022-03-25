@@ -1,4 +1,7 @@
+import os
+
 from fpdf import FPDF
+from pdf2image import convert_from_path
 from PIL import Image, ImageChops
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
@@ -17,12 +20,32 @@ def makePdf(pdfFileName, listPages, path):
     pdf.output(path + pdfFileName + '.pdf', 'F')
 
 
+def pdfTrimPages(path, pdfFileName, deleteTempFiles=True):
+    ''' Applies the trim function on pages of a pdf '''
+    dpi = 300
+    pages = convert_from_path(path + pdfFileName, dpi)
+    images = []
+    for i, page in enumerate(pages):
+        images.append(f'out{i}')
+        page.save(path + f'out{i}.jpg', 'JPEG')
+
+    for img in images:
+        trim(path, img, (dpi, dpi))
+
+    trimmed_images = [f'{img}_trimmed' for img in images]
+    makePdf(pdfFileName.replace('.pdf', '_trimmed.pdf'), trimmed_images, path)
+
+    if deleteTempFiles:
+        for img in (images + trimmed_images):
+            os.remove(path + img + '.jpg')
+
+
 def mergePdf(files, output):
     ''' Merge pdf files to one '''
     pdf_writer = PdfFileWriter()
 
     for path in files:
-        pdf_reader = PdfFileReader(path)
+        pdf_reader = PdfFileReader(path, strict=False)
         for page in range(pdf_reader.getNumPages()):
             pdf_writer.addPage(pdf_reader.getPage(page))
 
@@ -30,10 +53,23 @@ def mergePdf(files, output):
         pdf_writer.write(fh)
 
 
-def trim(path, file):
+def splitPdf(path, file, slices):
+    ''' Split pdf files to multiple '''
+    pdf_reader = PdfFileReader(path + file + '.pdf', strict=False)
+
+    for i, pages in enumerate(slices):
+        pdf_writer = PdfFileWriter()
+        for page in pages:
+            pdf_writer.addPage(pdf_reader.getPage(page))
+
+        with open(path + file + 'slice' + str(i) + '.pdf', 'wb') as fh:
+            pdf_writer.write(fh)
+
+
+def trim(path, file, dpi=None):
     ''' Trim background from image '''
     im = Image.open(path + file + '.jpg')
-    dpi = im.info['dpi']
+    dpi = dpi or im.info['dpi']
 
     bg = Image.new(im.mode, im.size, im.getpixel((im.size[0] - 1, 0)))
     diff = ImageChops.difference(im, bg)
@@ -52,8 +88,5 @@ def rotate(path, file, angle):
     im.rotate(angle).save(path + file + '_rotated.jpg', dpi=dpi)
 
 
-path = r'.'
-# trim(path, 'CCF11092018_00001')
-# rotate(path, 'CCF11092018_00001', 180)
-# mergePdf((path + file for file in ('x.pdf', 'y.pdf')), 'xy_merge.pdf')
-# makePdf('xy', ['x.jpg', 'y.jpg'], path)
+if __name__ == '__main__':
+    path = r'.\\'

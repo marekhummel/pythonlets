@@ -10,6 +10,7 @@ fpdf = "*"
 pypdf2 = "*"
 argparse = "*"
 pytube = {git = "https://github.com/nficano/pytube.git"}
+pdf2image = "*"
 
 [dev-packages]
 flake8 = "*"
