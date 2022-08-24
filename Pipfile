@@ -13,10 +13,10 @@ pytube = {git = "https://github.com/nficano/pytube.git"}
 pdf2image = "*"
 moviepy = "*"
 ffmpeg-python = "*"
-cassiopeia = "*"
 
 [dev-packages]
 flake8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.9"
