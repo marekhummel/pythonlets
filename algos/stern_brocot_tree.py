@@ -1,5 +1,6 @@
 # https://mathworld.wolfram.com/Stern-BrocotTree.html
 
+
 def approximate(x, max_deno):
     low = (0, 1)
     high = (1, 0)
@@ -20,4 +21,7 @@ def approximate(x, max_deno):
             return mid
 
 
-print(approximate(0.345345345345345345345345, 100000))
+x = 0.345345345345345345345345
+approx = approximate(x, 100000)
+print(x)
+print(approx, approx[0] / approx[1])

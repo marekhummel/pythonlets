@@ -2,24 +2,15 @@ from math import log
 
 
 def frog(n):
-    sum = 0
-    for i in range(1, n):
-        sum += 1.0 / n * (1 + frog(n-i))
-    return sum
+    return sum(1.0 / n * (1 + frog(n - i)) for i in range(1, n))
 
 
 def frog2(n):
-    sum = 1
-    for i in range(1, n):
-        sum += 1.0 / n * frog2(i)
-    return sum
+    return 1 + sum(1.0 / n * frog2(i) for i in range(1, n))
 
 
 def frog3(n):
-    sum = 0
-    for i in range(1, n+1):
-        sum += 1.0 / i
-    return sum
+    return sum(1.0 / i for i in range(1, n + 1))
 
 
 n = 10
@@ -27,4 +18,4 @@ n = 10
 print(frog(n))
 print(frog2(n))
 print(frog3(n))
-print(1 + log(n-1))
+print(1 + log(n - 1))

@@ -4,7 +4,7 @@
 BIT_LEN = 16
 CARRY_BIT = 1 << BIT_LEN
 LOW_MASK = (1 << BIT_LEN) - 1
-FULL_MASK = (1 << (2*BIT_LEN)) - 1
+FULL_MASK = (1 << (2 * BIT_LEN)) - 1
 
 
 def get_digits(n):
@@ -20,7 +20,7 @@ def get_digits(n):
 def longdiv(n, div):
     value = n
 
-    for i in range(BIT_LEN):
+    for _ in range(BIT_LEN):
         value = rot(value)
         # print(f'{i+1:2}', split(value), sep='\t')
 
@@ -41,15 +41,14 @@ def rot(n):
 
 def subc(n, sub):
     n = n & LOW_MASK | CARRY_BIT
-    res = n - sub
-    return res
+    return n - sub
 
 
 def split(n):
     carry = ((n >> BIT_LEN) & CARRY_BIT) >> BIT_LEN
     high = (n >> BIT_LEN) & LOW_MASK
     low = n & LOW_MASK
-    return f'{carry} {high:016b}|{low:016b}'
+    return f"{carry} {high:016b}|{low:016b}"
 
 
 n = 34532

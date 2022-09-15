@@ -1,10 +1,10 @@
 from math import floor, sqrt
 
-max = 100
+limit = 100
 
-for i in range(1, max + 1):
+for i in range(1, limit + 1):
     ip = floor(sqrt(i))
-    a = ip + (i - ip ** 2) / (ip * 2)
+    a = ip + (i - ip**2) / (ip * 2)
     off = a - sqrt(i)
     if ip == sqrt(i):
         print()

@@ -13,14 +13,14 @@ def fibonacci(x, y):
 
 
 def printfrac(x, y):
-    print(x, '/', y)
+    print(x, "/", y)
 
-    print('  corr', x / y)
+    print("  correct     ", x / y)
 
     fib = list(fibonacci(x, y))
-    valfib = sum([1 / x for x in fib])
-    print('  fibo', valfib)
-    print('  denos', fib)
+    valfib = sum(1 / x for x in fib)
+    print("  fibonacci   ", valfib)
+    print("  denominators", fib)
     print()
 
 

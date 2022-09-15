@@ -8,7 +8,7 @@ def kaprekar_iter(n: int):
     return n2 - n1
 
 
-solus = dict()
+solus = {}
 for n in range(1, 10000):
     if len(set(f'{n:04d}')) == 1:
         continue
