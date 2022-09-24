@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b6cfb9c965c0ac10b5f26016421ff02927165c93f0fbf40746481db1cbdbb03a"
+            "sha256": "d3d35a33bcd96e21d1952d287163e4011be424586840a80ce0a779f4068c39ec"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -198,6 +198,13 @@
             "markers": "python_version >= '3.4'",
             "version": "==0.4.7"
         },
+        "instaloader": {
+            "hashes": [
+                "sha256:20d2794b871bdfd08ff8e73dd8d75f41f4871cfe980ae709d857df75a67691a9"
+            ],
+            "index": "pypi",
+            "version": "==4.9.4"
+        },
         "kiwisolver": {
             "hashes": [
                 "sha256:02f79693ec433cb4b5f51694e8477ae83b3205768a6fb48ffba60549080e295b",
@@ -365,7 +372,7 @@
                 "sha256:f8c02ec3c4c4fcb718fdf89a6c6f709b14949408e8cf2a2be5bfa9c49548fd85",
                 "sha256:ffcf105ecdd9396e05a8e58e81faaaf34d3f9875f137c7372450baa5d77c9a54"
             ],
-            "markers": "python_version >= '2.7'",
+            "markers": "python_version != '2.7'",
             "version": "==1.23.3"
         },
         "packaging": {

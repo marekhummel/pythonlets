@@ -1,4 +1,5 @@
 .vscode/
 __pycache__/
+out/
 log.txt
 config.cfg
