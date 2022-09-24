@@ -1,3 +1,4 @@
+from datetime import datetime
 from glob import glob
 from os.path import expanduser
 from platform import system
@@ -7,6 +8,7 @@ import instaloader as il
 
 
 def import_session(loader):
+    """Sample code from instaloader docs"""
     # Find firefox cookies
     default_cookiefile = {
         "Windows": "~/AppData/Roaming/Mozilla/Firefox/Profiles/*/cookies.sqlite",
@@ -50,4 +52,6 @@ user = import_session(loader)
 
 # Update path and download
 loader.dirname_pattern = f"out/instagram/{user}/saved/"
-loader.download_saved_posts()
+loader.download_saved_posts(
+    post_filter=lambda item: item.date_utc > datetime(2022, 9, 1)
+)
