@@ -19,13 +19,9 @@ def import_session(loader):
     # Connect and find insta session
     conn = connect(f"file:{cookiefile}?immutable=1", uri=True)
     try:
-        cookie_data = conn.execute(
-            "SELECT name, value FROM moz_cookies WHERE baseDomain='instagram.com'"
-        )
+        cookie_data = conn.execute("SELECT name, value FROM moz_cookies WHERE baseDomain='instagram.com'")
     except OperationalError:
-        cookie_data = conn.execute(
-            "SELECT name, value FROM moz_cookies WHERE host LIKE '%instagram.com'"
-        )
+        cookie_data = conn.execute("SELECT name, value FROM moz_cookies WHERE host LIKE '%instagram.com'")
 
     # Set session
     loader.context._session.cookies.update(cookie_data)
@@ -52,6 +48,4 @@ user = import_session(loader)
 
 # Update path and download
 loader.dirname_pattern = f"out/instagram/{user}/saved/"
-loader.download_saved_posts(
-    post_filter=lambda item: item.date_utc > datetime(2022, 9, 1)
-)
+loader.download_saved_posts()  # post_filter=lambda item: item.date_utc > datetime(2022, 12, 3))
