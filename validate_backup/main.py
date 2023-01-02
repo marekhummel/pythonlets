@@ -5,10 +5,12 @@ import hashlib
 import json
 import os
 import os.path
+import shutil
 from time import perf_counter
 
-DATA_PATH = "G:\\"
 BACKUP_PATH = r"D:\OneDrive"
+DATA_PATH = "G:\\"
+IGNORED = ["FOUND.000", "System Volume Information", ".Spotlight-V100"]
 
 
 def get_file_iterator(root):
@@ -52,13 +54,19 @@ def compute_file_hash(file):
         return None
 
 
-def check_data(path, hashset, target):
+def check_data(path, hashset, ignored):
     print("Check files")
+    abs_ignored = [os.path.join(path, i) for i in ignored]
+
     total = 0
     not_found = []
     not_found_count = 0
     with cf.ProcessPoolExecutor() as executor:
         for currentpath, _, files in os.walk(path):
+            if currentpath in abs_ignored:
+                print(f" - {currentpath} is skipped")
+                continue
+
             fullfiles = [os.path.join(currentpath, f) for f in files]
             total += len(fullfiles)
 
@@ -75,6 +83,22 @@ def check_data(path, hashset, target):
 
     print(f"{not_found_count} of {total} files not found.")
     return not_found
+
+
+def copy_not_found(root, files, check_path):
+    print("Copy missing data")
+    os.mkdir(check_path)
+
+    for f in files:
+        target = f.replace(root, check_path)
+
+        if f.endswith("*.*"):
+            shutil.copytree(f.replace("*.*", ""), target.replace("*.*", ""), dirs_exist_ok=True)
+        else:
+            folder = target[: target.rindex("\\")]
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+            shutil.copy2(f, target)
 
 
 def group_files(files):
@@ -101,14 +125,28 @@ def group_files(files):
 
 
 if __name__ == "__main__":
+    # Start
     start = perf_counter()
     hash_path = r".\validate_backup\hashes.json"
     target_path = r".\validate_backup\not_found.json"
+    check_path = r".\validate_backup\check\\"
 
+    # Check paths
+    if os.path.exists(check_path):
+        print("Remove check folder")
+        exit(1)
+
+    # Check
     backup_hashes = get_hashdict(BACKUP_PATH, hash_path)
-    files = check_data(DATA_PATH, backup_hashes, target_path)
-    hierarchy = group_files(files)
+    files = check_data(DATA_PATH, backup_hashes, IGNORED)
 
+    # Copy not found
+    # copy_not_found(DATA_PATH, files, check_path)
+
+    # Create lookup
+    hierarchy = group_files(files)
     with open(target_path, mode="w") as f:
         json.dump(hierarchy, f, indent=4, separators=(", ", ": "), sort_keys=True)
+
+    # Done
     print(perf_counter() - start)
