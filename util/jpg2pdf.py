@@ -8,16 +8,15 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 def makePdf(pdfFileName, listPages, path):
     """List of jpg files to pdf"""
-    cover = Image.open(path + str(listPages[0]))
-    width, height = cover.size
-
-    pdf = FPDF(unit="pt", format=[width, height])
+    pdf = FPDF(unit="pt")
 
     for page in listPages:
-        pdf.add_page()
+        cover = Image.open(path + str(page))
+        width, height = cover.size
+        pdf.add_page(format=(width, height))
         pdf.image(path + str(page), 0, 0)
 
-    pdf.output(path + pdfFileName + ".pdf", "F")
+    pdf.output(path + pdfFileName)
 
 
 def pdfTrimPages(path, pdfFileName, deleteTempFiles=True):
@@ -26,18 +25,18 @@ def pdfTrimPages(path, pdfFileName, deleteTempFiles=True):
     pages = convert_from_path(path + pdfFileName, dpi)
     images = []
     for i, page in enumerate(pages):
-        images.append(f"out{i}")
+        images.append(f"out{i}.jpg")
         page.save(path + f"out{i}.jpg", "JPEG")
 
     for img in images:
         trim(path, img, (dpi, dpi))
 
-    trimmed_images = [f"{img}_trimmed" for img in images]
+    trimmed_images = [img.replace(".jpg", "_trimmed.jpg") for img in images]
     makePdf(pdfFileName.replace(".pdf", "_trimmed.pdf"), trimmed_images, path)
 
     if deleteTempFiles:
         for img in images + trimmed_images:
-            os.remove(path + img + ".jpg")
+            os.remove(path + img)
 
 
 def mergePdf(files, output):
@@ -68,16 +67,16 @@ def splitPdf(path, file, slices):
 
 def trim(path, file, dpi=None):
     """Trim background from image"""
-    im = Image.open(path + file + ".jpg")
+    im = Image.open(path + file)
     dpi = dpi or im.info["dpi"]
 
-    bg = Image.new(im.mode, im.size, im.getpixel((im.size[0] - 1, 0)))
+    bg = Image.new(im.mode, im.size, im.getpixel((im.size[0] - 1, im.size[1] - 1)))
     diff = ImageChops.difference(im, bg)
-    diff = ImageChops.add(diff, diff, 2.0, -100)
+    # diff = ImageChops.add(diff, diff, 2.0, -100)
     bbox = diff.getbbox()
     if bbox:
         im = im.crop(bbox)
-        im.save(path + file + "_trimmed.jpg", dpi=dpi)
+        im.save(path + file.replace(".jpg", "_trimmed.jpg"), dpi=dpi)
     return bool(bbox)
 
 
