@@ -1,5 +1,5 @@
 import struct
-from math import sqrt
+from math import sqrt, log2
 
 
 """
@@ -37,4 +37,5 @@ def inv_sqrt(x):
 x = 23.6
 print(f'{x=}')
 print(f'{1 / sqrt(x)=}')
+print(f'{2 ** (-0.5 * log2(x))=}')
 print(f'{inv_sqrt(x)=}')
