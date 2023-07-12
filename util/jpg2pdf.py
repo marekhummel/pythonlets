@@ -3,7 +3,7 @@ import os
 from fpdf import FPDF
 from pdf2image import convert_from_path
 from PIL import Image, ImageChops
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader, PdfWriter
 
 
 def makePdf(pdfFileName, listPages, path):
@@ -19,7 +19,7 @@ def makePdf(pdfFileName, listPages, path):
     pdf.output(path + pdfFileName)
 
 
-def pdfTrimPages(path, pdfFileName, deleteTempFiles=True):
+def pdfTrimPages(path, pdfFileName, deleteTempFiles=True, bbox=None):
     """Applies the trim function on pages of a pdf"""
     dpi = 300
     pages = convert_from_path(path + pdfFileName, dpi)
@@ -29,7 +29,7 @@ def pdfTrimPages(path, pdfFileName, deleteTempFiles=True):
         page.save(path + f"out{i}.jpg", "JPEG")
 
     for img in images:
-        trim(path, img, (dpi, dpi))
+        trim(path, img, (dpi, dpi), bbox)
 
     trimmed_images = [img.replace(".jpg", "_trimmed.jpg") for img in images]
     makePdf(pdfFileName.replace(".pdf", "_trimmed.pdf"), trimmed_images, path)
@@ -54,29 +54,36 @@ def mergePdf(files, output):
 
 def splitPdf(path, file, slices):
     """Split pdf files to multiple"""
-    pdf_reader = PdfFileReader(path + file + ".pdf", strict=False)
+    pdf_reader = PdfReader(path + file, strict=False)
 
     for i, pages in enumerate(slices):
-        pdf_writer = PdfFileWriter()
+        pdf_writer = PdfWriter()
         for page in pages:
-            pdf_writer.addPage(pdf_reader.getPage(page))
+            pdf_writer.add_page(pdf_reader.pages[page])
 
-        with open(path + file + "slice" + str(i) + ".pdf", "wb") as fh:
+        with open(path + file.replace(".pdf", f"_slice{i}.pdf"), "wb") as fh:
             pdf_writer.write(fh)
 
 
-def trim(path, file, dpi=None):
+def trim(path, file, dpi=None, bbox_man=None):
     """Trim background from image"""
     im = Image.open(path + file)
     dpi = dpi or im.info["dpi"]
 
-    bg = Image.new(im.mode, im.size, im.getpixel((im.size[0] - 1, im.size[1] - 1)))
-    diff = ImageChops.difference(im, bg)
-    # diff = ImageChops.add(diff, diff, 2.0, -100)
-    bbox = diff.getbbox()
+    if bbox_man:
+        width, height = im.size
+        left, upper, right, lower = bbox_man
+        bbox = (left * width, upper * height, right * width, lower * height)
+    else:
+        bg = Image.new(im.mode, im.size, im.getpixel((im.size[0] - 1, im.size[1] - 1)))
+        diff = ImageChops.difference(im, bg)
+        # diff = ImageChops.add(diff, diff, 2.0, -100)
+        bbox = diff.getbbox()
+
     if bbox:
         im = im.crop(bbox)
         im.save(path + file.replace(".jpg", "_trimmed.jpg"), dpi=dpi)
+
     return bool(bbox)
 
 

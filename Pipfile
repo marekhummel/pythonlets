@@ -19,6 +19,9 @@ instaloader = "*"
 [dev-packages]
 flake8 = "*"
 black = "*"
+isort = "*"
+rope = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.11"
