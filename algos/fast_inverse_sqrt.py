@@ -1,6 +1,5 @@
 import struct
-from math import sqrt, log2
-
+from math import log2, sqrt
 
 """
 float Q_rsqrt( float number )
@@ -26,16 +25,16 @@ def inv_sqrt(x):
     x = float(x)
     xhalf = 0.5 * x
 
-    i = struct.unpack('l', struct.pack('f', x))[0]
-    i = 0x5f3759df - (i >> 1)
-    x = struct.unpack('f', struct.pack('l', i))[0]
+    i = struct.unpack("l", struct.pack("f", x))[0]
+    i = 0x5F3759DF - (i >> 1)
+    x = struct.unpack("f", struct.pack("l", i))[0]
     x = x * (1.5 - xhalf * x * x)
     # x = x * (1.5 - xhalf * x * x)
     return x
 
 
 x = 23.6
-print(f'{x=}')
-print(f'{1 / sqrt(x)=}')
-print(f'{2 ** (-0.5 * log2(x))=}')
-print(f'{inv_sqrt(x)=}')
+print(f"{x=}")
+print(f"{1 / sqrt(x)=}")
+print(f"{2 ** (-0.5 * log2(x))=}")
+print(f"{inv_sqrt(x)=}")

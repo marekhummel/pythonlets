@@ -14,7 +14,7 @@ def download_playlist(uri, target, ignore_rgx):
         download_video(link, target, ignore_rgx)
 
 
-def download_video(uri, target, ignore_rgx='(?!)'):
+def download_video(uri, target, ignore_rgx="(?!)"):
     cols = shutil.get_terminal_size()[0] - 1
 
     tries = 0
@@ -29,11 +29,11 @@ def download_video(uri, target, ignore_rgx='(?!)'):
             if safe_filename(yt.title) in all_files:
                 print(f'"{yt.title}" skipped.'.ljust(cols))
                 return
-            print(f'"{yt.title}" downloading...'.ljust(cols), end='\r')
+            print(f'"{yt.title}" downloading...'.ljust(cols), end="\r")
             yt.streams.get_highest_resolution().download(target)
             print(f'"{yt.title}" done.'.ljust(cols))
             break
-        except:
+        except:  # noqa
             tries += 1
     else:
         print(f'"{uri}" failed.'.ljust(cols))

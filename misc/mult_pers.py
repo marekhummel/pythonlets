@@ -1,6 +1,6 @@
 # https://www.youtube.com/watch?v=Wim9WJeDTHQ
-from functools import reduce
 import time
+from functools import reduce
 
 
 # Counts persistency value
@@ -22,7 +22,7 @@ def low(length):
         # print(dl)
         gen = genNum(dl)
         for ds in gen:
-            n = sum([d * 10**(len(ds)-i-1) for i, d in enumerate(ds)])
+            n = sum([d * 10 ** (len(ds) - i - 1) for i, d in enumerate(ds)])
             if per(n) == length:
                 return n
 
@@ -39,29 +39,29 @@ def genNum(len, curr=[]):
     def next(n):
         # Only return numbers where the digits are sorted
         if curr == [] or curr[-1] <= n:
-            return list(genNum(len-1, curr + [n]))
+            return list(genNum(len - 1, curr + [n]))
         else:
             return []
 
     lst = []
-    if 2 not in curr:   # Multiple 2s could be substituted with a 4
+    if 2 not in curr:  # Multiple 2s could be substituted with a 4
         lst += next(2)
 
-    if 2 not in curr and 3 not in curr:   # 2 and 3 can be subst with 6
+    if 2 not in curr and 3 not in curr:  # 2 and 3 can be subst with 6
         lst += next(3)
 
-    if 2 not in curr:   # 2 and 4 can be subst with 8
+    if 2 not in curr:  # 2 and 4 can be subst with 8
         lst += next(4)
 
-    if 2 not in curr and 4 not in curr:   # 5 and even number will lead to a 0
+    if 2 not in curr and 4 not in curr:  # 5 and even number will lead to a 0
         lst += next(5)
 
-    if 5 not in curr:   # 5 and 6 lead to a 0
+    if 5 not in curr:  # 5 and 6 lead to a 0
         lst += next(6)
 
     lst += next(7)
 
-    if 5 not in curr:   # 5 and 8 lead to a 0
+    if 5 not in curr:  # 5 and 8 lead to a 0
         lst += next(8)
 
     lst += next(9)

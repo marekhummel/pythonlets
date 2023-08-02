@@ -35,9 +35,9 @@ class FiboMinHeap:
                 merged = self._merge_nodes(current, merged)
                 degree_map[deg] = None
                 deg += 1
-            
+
             degree_map[deg] = merged
-            
+
         # Rebuild
         self._rootlist = []
         self._front = -1
@@ -45,7 +45,7 @@ class FiboMinHeap:
             if new_root is None:
                 continue
             self._extend_nodelist(new_root)
-            
+
         # Get result (and remove lookup)
         elem = minRoot.value[1]
         self._node_lookup[elem] = None
@@ -75,9 +75,9 @@ class FiboMinHeap:
             if not parent.marked:
                 parent.marked = True
                 break
-            
+
             cut_out = parent
-        
+
     def _extend_nodelist(self, node):
         self._rootlist.append(node)
         if self._front == -1 or node.value[0] < self._rootlist[self._front].value[0]:
@@ -106,19 +106,19 @@ class Node:
         return len(self.children)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     h = FiboMinHeap()
     prio = [1, 3, 4, 5, 4, 6, 6, 8, 5, 7]
     h._data = [(p, i) for i, p in enumerate(prio)]
 
-    print('orig')
+    print("orig")
     print(h._data)
-    print('insert')
-    h.insert('x', 2)
+    print("insert")
+    h.insert("x", 2)
     print(h._data)
-    print('extract')
+    print("extract")
     print(h.extract_min())
     print(h._data)
-    print('decrease')
+    print("decrease")
     h.decrease_key(3, 1)
     print(h._data)

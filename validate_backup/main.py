@@ -8,9 +8,9 @@ import os.path
 import shutil
 from time import perf_counter
 
-BACKUP_PATH = r"D:\OneDrive"
-DATA_PATH = "G:\\"
-IGNORED = ["FOUND.000", "System Volume Information", ".Spotlight-V100"]
+DATA_PATH = r"D:\UserFolders\Backup"
+BACKUP_PATH = r"D:\OneDrive\Pictures"
+IGNORED = []  # ["FOUND.000", "System Volume Information", ".Spotlight-V100"]
 
 
 def get_file_iterator(root):
@@ -32,7 +32,7 @@ def get_hashdict(file_path, hashlist_path):
             hashlist[f] = file_hash
 
     print(f"Created hashlist with {len(hashlist)} entries")
-    with open(hashlist_path, "w") as f:
+    with open(hashlist_path, "w", encoding="utf-8") as f:
         json.dump(hashlist, f)
     return set(hashlist.values())
 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     # Create lookup
     hierarchy = group_files(files)
-    with open(target_path, mode="w") as f:
+    with open(target_path, mode="w", encoding="utf-8") as f:
         json.dump(hierarchy, f, indent=4, separators=(", ", ": "), sort_keys=True)
 
     # Done

@@ -3,7 +3,7 @@
 
 def lis(a):
     n = len(a)
-    maxpath = [{'path': [i], 'length': 0} for i in range(n)]
+    maxpath = [{"path": [i], "length": 0} for i in range(n)]
 
     changed = True
     while changed:
@@ -11,14 +11,14 @@ def lis(a):
         for i in range(n):
             for j in range(i):
                 if a[j] < a[i]:
-                    if maxpath[j]['length'] + 1 > maxpath[i]['length']:
-                        maxpath[i]['length'] = maxpath[j]['length'] + 1
-                        maxpath[i]['path'] = maxpath[j]['path'] + [i]
+                    if maxpath[j]["length"] + 1 > maxpath[i]["length"]:
+                        maxpath[i]["length"] = maxpath[j]["length"] + 1
+                        maxpath[i]["path"] = maxpath[j]["path"] + [i]
                         changed = True
 
-    best = sorted(maxpath, key=lambda x: x['length'])[-1]
+    best = sorted(maxpath, key=lambda x: x["length"])[-1]
 
-    return ([a[i] for i in best['path']], best['length']+1)
+    return ([a[i] for i in best["path"]], best["length"] + 1)
     # return (best['path'], best['length']+1)
 
 
@@ -29,7 +29,7 @@ def lis2(a):
 
     maxlis = 0
     for i, x in enumerate(a):
-        lis_i = lis2(a[:i+1])
+        lis_i = lis2(a[: i + 1])
         if x < a[-1]:
             lis_i += 1
 

@@ -5,7 +5,7 @@ def numways(n):
     if n == 2:
         return 1 + numways(1)
 
-    return numways(n-1) + numways(n-2)
+    return numways(n - 1) + numways(n - 2)
 
 
 def numways2(n, x):

@@ -2,9 +2,9 @@
 #
 # Coroutine producer-consumer problem.  With async-await
 
+import heapq
 import time
 from collections import deque
-import heapq
 
 
 class Awaitable:
@@ -20,7 +20,7 @@ class Scheduler:
     def __init__(self):
         self.ready = deque()
         self.sleeping = []
-        self.current = None    # Currently executing generator
+        self.current = None  # Currently executing generator
         self.sequence = 0
 
     async def sleep(self, delay):
@@ -28,7 +28,7 @@ class Scheduler:
         self.sequence += 1
         heapq.heappush(self.sleeping, (deadline, self.sequence, self.current))
         self.current = None  # "Disappear"
-        await switch()       # Switch tasks
+        await switch()  # Switch tasks
 
     def new_task(self, coro):
         self.ready.append(coro)
@@ -45,7 +45,7 @@ class Scheduler:
             self.current = self.ready.popleft()
             # Drive as a generator
             try:
-                self.current.send(None)   # Send to a coroutine
+                self.current.send(None)  # Send to a coroutine
                 if self.current:
                     self.ready.append(self.current)
             except StopIteration:
@@ -64,22 +64,23 @@ class AsyncQueue:
 
     async def get(self):
         if not self.items:
-            self.waiting.append(sched.current)   # Put myself to sleep
-            sched.current = None        # "Disappear"
-            await switch()              # Switch to another task
+            self.waiting.append(sched.current)  # Put myself to sleep
+            sched.current = None  # "Disappear"
+            await switch()  # Switch to another task
         return self.items.popleft()
 
 
 # ----------------
 
+
 async def producer(q, count):
     for n in range(count):
-        print('Producing', n)
+        print("Producing", n)
         await q.put(n)
         await sched.sleep(0.5)
 
-    print('Producer done')
-    await q.put(None)   # "Sentinel" to shut down
+    print("Producer done")
+    await q.put(None)  # "Sentinel" to shut down
 
 
 async def consumer(q):
@@ -87,12 +88,12 @@ async def consumer(q):
         item = await q.get()
         if item is None:
             break
-        print('Consuming', item)
+        print("Consuming", item)
         await sched.sleep(1)
-    print('Consumer done')
+    print("Consumer done")
 
 
-sched = Scheduler()    # Background scheduler object
+sched = Scheduler()  # Background scheduler object
 q = AsyncQueue()
 sched.new_task(producer(q, 10))
 sched.new_task(consumer(q))

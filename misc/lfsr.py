@@ -7,13 +7,13 @@ def lsfr(input_str, feedback_func):
 
     def one_iter(val):
         feedback = feedback_func(val)
-        new = (feedback << (n-1)) | (val >> 1)
+        new = (feedback << (n - 1)) | (val >> 1)
         return new
 
     start = int(input_str, 2)
     state = start
     i = 1
-    out = ''
+    out = ""
     while (state != start or i == 1) and i < 10000:
         # print(state & 1, end='')
         out += str(state & 1)
@@ -36,7 +36,7 @@ def feedback3(s):
     return ((s >> 0) ^ (s >> 1) ^ (s >> 2) ^ (s >> 7)) & 1
 
 
-start = '{:0b}'.format((1 << 127) | 1)
+start = "{:0b}".format((1 << 127) | 1)
 print(start)
 out = lsfr(start, feedback3)
 print(out)

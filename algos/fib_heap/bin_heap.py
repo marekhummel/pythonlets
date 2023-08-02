@@ -67,20 +67,19 @@ class BinaryMinHeap:
             current = parent
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     h = BinaryMinHeap()
     prio = [1, 3, 4, 5, 4, 6, 6, 8, 5, 7]
     h._data = [(p, i) for i, p in enumerate(prio)]
 
-    print('orig')
+    print("orig")
     print(h._data)
-    print('insert')
-    h.insert('x', 2)
+    print("insert")
+    h.insert("x", 2)
     print(h._data)
-    print('extract')
+    print("extract")
     print(h.extract_min())
     print(h._data)
-    print('decrease')
+    print("decrease")
     h.decrease_key(3, 1)
     print(h._data)

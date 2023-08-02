@@ -1,5 +1,6 @@
-from cell import Cell
 from itertools import combinations as comb
+
+from cell import Cell
 
 
 class Sudoku:
@@ -12,12 +13,12 @@ class Sudoku:
 
         for ri, row in enumerate(self.cells):
             for ci, cell in enumerate(row):
-                print(' ' + str(cell), end='')
+                print(" " + str(cell), end="")
                 if ci % 3 == 2 and ci != 8:
-                    print(' |', end='')
+                    print(" |", end="")
             print()
             if ri % 3 == 2 and ri != 8:
-                print('-------+-------+-------')
+                print("-------+-------+-------")
 
         print()
 
@@ -49,8 +50,8 @@ class Sudoku:
 
     def get_cells_in_box(self, r, c):
         top, left = r // 3 * 3, c // 3 * 3
-        for r in range(top, top+3):
-            for c in range(left, left+3):
+        for r in range(top, top + 3):
+            for c in range(left, left + 3):
                 yield self.cells[r][c]
 
     # -- Returns generator of all rows / columns / boxes --
@@ -75,11 +76,11 @@ class Sudoku:
 
     # Read from string
     def read(self, s):
-        assert(len(s) == 81)
-        nums = s.replace('.', '0')
+        assert len(s) == 81
+        nums = s.replace(".", "0")
         for i in range(len(nums)):
             c, r = i % 9, i // 9
-            if nums[i] != '0':
+            if nums[i] != "0":
                 self.update_cell(r, c, int(nums[i]))
 
     # Checks if the sudoku is solvable
@@ -185,7 +186,7 @@ class Sudoku:
     # Being in the same grp, although its unknown which belongs to which cell,
     # it can be said for sure, that the candidates can be cancelled in every other cell in the same grp.
     def naked_tuple(self, n):
-        assert(2 <= n <= 4)
+        assert 2 <= n <= 4
 
         # Iterate over all grps
         for group in self.get_all_groups():
@@ -202,7 +203,7 @@ class Sudoku:
 
                 if len(all_marks) == n:
                     # Naked tuple found
-                    for cell in (group - subset):
+                    for cell in group - subset:
                         for mark in all_marks:
                             cell.remove_candidate(mark)
 

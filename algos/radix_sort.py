@@ -37,11 +37,11 @@ def radix_sort_counts(array):
 
         # Convert counters to prefix sum
         for i in range(1, 10):
-            prefix_sum[i] += prefix_sum[i-1]
+            prefix_sum[i] += prefix_sum[i - 1]
 
         # Create output list
         output = [0 for _ in range(len(array))]
-        for i in range(len(array)-1, -1, -1):
+        for i in range(len(array) - 1, -1, -1):
             n = array[i]
             d = get_digit(n, digit_idx)
             prefix_sum[d] -= 1

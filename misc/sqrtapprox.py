@@ -8,8 +8,4 @@ for i in range(1, limit + 1):
     off = a - sqrt(i)
     if ip == sqrt(i):
         print()
-    print(
-        "{0}:\t\t{1}\t\t{2}\t\t{3}".format(
-            i, round(sqrt(i), 3), round(a, 3), round(off, 3)
-        )
-    )
+    print("{0}:\t\t{1}\t\t{2}\t\t{3}".format(i, round(sqrt(i), 3), round(a, 3), round(off, 3)))

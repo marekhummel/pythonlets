@@ -3,18 +3,18 @@ from functools import reduce
 
 def gen_row(w, s):
     """Create all patterns of a row or col that match given runs."""
+
     def gen_seg(o, sp):
         if not o:
             return [[2] * sp]
-        return [[2] * x + o[0] + tail
-                for x in range(1, sp - len(o) + 2)
-                for tail in gen_seg(o[1:], sp - x)]
+        return [[2] * x + o[0] + tail for x in range(1, sp - len(o) + 2) for tail in gen_seg(o[1:], sp - x)]
 
     return [x[1:] for x in gen_seg([[1] * i for i in s], w + 1 - sum(s))]
 
 
 def deduce(hr, vr):
     """Fix inevitable value of cells, and propagate."""
+
     def allowable(row):
         return reduce(lambda a, b: [x | y for x, y in zip(a, b)], row)
 
@@ -97,15 +97,14 @@ def deduce(hr, vr):
 
 
 def solve(s, show_runs=True):
-    s = [[[ord(c) - ord('A') + 1 for c in w] for w in ln.split()]
-         for ln in s.splitlines()]
+    s = [[[ord(c) - ord("A") + 1 for c in w] for w in ln.split()] for ln in s.splitlines()]
     if show_runs:
         print("Horizontal runs:", s[0])
         print("Vertical runs:", s[1])
     deduce(s[0], s[1])
 
 
-rows = 'A C BAAA BAD G AI CA B CB BB A BD AC F EA'
-cols = 'A BC BB BB FC AAB EB CB EA CBAA BBA AAB CAA AAA AA'
+rows = "A C BAAA BAD G AI CA B CB BB A BD AC F EA"
+cols = "A BC BB BB FC AAB EB CB EA CBAA BBA AAB CAA AAA AA"
 
-solve(rows + '\n' + cols)
+solve(rows + "\n" + cols)

@@ -7,7 +7,6 @@ name = "pypi"
 phonenumbers = "*"
 matplotlib = "*"
 fpdf2 = "*"
-pypdf2 = "*"
 argparse = "*"
 pytube = {git = "https://github.com/nficano/pytube.git"}
 pdf2image = "*"
@@ -15,6 +14,7 @@ moviepy = "*"
 ffmpeg-python = "*"
 musicalbeeps = "*"
 instaloader = "*"
+pypdf = "*"
 
 [dev-packages]
 flake8 = "*"
@@ -22,6 +22,7 @@ black = "*"
 isort = "*"
 rope = "*"
 mypy = "*"
+flake8-pyproject = "*"
 
 [requires]
 python_version = "3.11"

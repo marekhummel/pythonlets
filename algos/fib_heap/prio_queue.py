@@ -59,7 +59,7 @@ class PriorityQueueFiboHeap:
 
 class PriorityQueueNaive:
     """
-    PQ with simple list as PQ, yields peek in constant time, enqueue and 
+    PQ with simple list as PQ, yields peek in constant time, enqueue and
     update in constant time as well, but dequeue in linear time
     """
 
@@ -90,7 +90,7 @@ class PriorityQueueNaive:
     def dequeue(self):
         if self._front == -1:
             return None
-        
+
         result = self._data.pop(self._front)[1]
         front = 0
         for i, v in enumerate(self._data):

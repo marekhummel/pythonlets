@@ -6,7 +6,7 @@ from itertools import count
 # s is the amount of sides (square would be s = 4)
 # n is sort of the side length
 def polygonalNumber(s, n):
-    return (s-2)*(n)*(n-1) // 2 + n
+    return (s - 2) * (n) * (n - 1) // 2 + n
 
 
 for s in [4, 6, 8, 31265]:

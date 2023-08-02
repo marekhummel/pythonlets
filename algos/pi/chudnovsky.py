@@ -1,6 +1,5 @@
-from math import prod
-
 from decimal import Decimal, getcontext
+from math import prod
 
 
 def chudnovsky(prec):

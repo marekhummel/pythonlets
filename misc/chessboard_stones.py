@@ -1,8 +1,8 @@
 # https://www.youtube.com/watch?v=m4Uth-EaTZ8
 
 
-from typing import NamedTuple
 import sys
+from typing import NamedTuple
 
 Point = NamedTuple("Point", [("x", int), ("y", int)])
 Bounds = NamedTuple("Bounds", [("xl", int), ("xh", int), ("yl", int), ("yh", int)])

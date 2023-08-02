@@ -1,6 +1,7 @@
 # Given a video mp4 (no audio) and an audio mp4 (no video), merge to one
+from os import mkdir
+
 from moviepy.video.io.ffmpeg_tools import ffmpeg_merge_video_audio
-from os import mkdir, rename
 
 # ------
 

@@ -1,7 +1,5 @@
 from itertools import product
 
-
-
 # -> 3-Digit-Lock
 # DOMAIN = [str(i) for i in range(10)]
 # IMAGE_SIZE = 3
@@ -15,12 +13,11 @@ from itertools import product
 # ]
 
 
-
 # ** Puzzle settings **
 # Given the puzzle domains and the given guesses, evaluates the possible solutions
 
 # Domain (and codomain) values
-DOMAIN = ['red', 'green', 'white', 'blue', 'yellow', 'purple']
+DOMAIN = ["red", "green", "white", "blue", "yellow", "purple"]
 
 # Length of solution
 IMAGE_SIZE = 3
@@ -33,6 +30,7 @@ GUESSES = []
 
 
 # *********************
+
 
 def compute_next_guess(solution_space, response_space):
     best = None
@@ -86,9 +84,9 @@ def main_print_solutions():
     combs = compute_solution_space()
     solutions = compute_solutions(combs, GUESSES)
 
-    print(f'Possible solutions: {len(solutions)}')
+    print(f"Possible solutions: {len(solutions)}")
     for s in solutions:
-        print(f'  {s}')
+        print(f"  {s}")
 
 
 def main_iterative():
@@ -98,7 +96,7 @@ def main_iterative():
     while True:
         guess = compute_next_guess(solution_space, response_space)
         print(guess)
-        resp = input('Response: ')
+        resp = input("Response: ")
 
         if not resp:
             break
@@ -107,7 +105,7 @@ def main_iterative():
         GUESSES.append((guess, p, v))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main_iterative()
     # main_print_solutions()
     # pass

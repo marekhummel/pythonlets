@@ -1,6 +1,6 @@
 class Cell:
-    ''' A cell defines itself over an index
-        (row and column plus a value or a set of candidates) '''
+    """A cell defines itself over an index
+    (row and column plus a value or a set of candidates)"""
 
     def __init__(self, r, c):
         self.row = r
@@ -13,7 +13,7 @@ class Cell:
         self.candidates = set()
 
     def remove_candidate(self, c):
-        if (c in self.candidates):
+        if c in self.candidates:
             self.candidates.remove(c)
 
     # Returns the index of the box the cell is in, 0 to 8, left to right, top to bottom

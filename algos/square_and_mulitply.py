@@ -3,21 +3,21 @@
 
 
 def compute_chain(exponent):
-    binary = f'{exponent:b}'
-    chain = ''
+    binary = f"{exponent:b}"
+    chain = ""
     for bit in binary[1:]:
-        chain += 'S'
-        if bit == '1':
-            chain += 'M'
+        chain += "S"
+        if bit == "1":
+            chain += "M"
     return chain
 
 
 def execute_chain(base, chain, modulus):
     value = base
     for action in chain:
-        if action == 'S':
+        if action == "S":
             value = value * value % modulus
-        elif action == 'M':
+        elif action == "M":
             value = value * base % modulus
     return value
 
