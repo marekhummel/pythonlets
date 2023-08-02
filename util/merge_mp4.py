@@ -5,12 +5,12 @@ from os import mkdir, rename
 # ------
 
 path = r"D:\UserFolders\Downloads\dwhelper\\"
-title = "Das Einmaleins für Finanzen"
+title = "Wirtschaft"
 mkdir(path + title)
 mkdir(path + title + "\\Lektionen")
 
 
-for i in range(9):
+for i in range(12):
     video = f"»{title}« Die ZEIT Akademie - Seminar Player www.zeitakademie.de-{i*2}.mp4"
 
     if i == 0:
