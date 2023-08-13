@@ -15,6 +15,7 @@ ffmpeg-python = "*"
 musicalbeeps = "*"
 instaloader = "*"
 pypdf = "*"
+simplegmail = "*"
 
 [dev-packages]
 flake8 = "*"

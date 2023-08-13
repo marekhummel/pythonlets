@@ -128,5 +128,5 @@ def _backup_original(file: Path) -> tuple[Path, Path]:
 
 
 if __name__ == "__main__":
-    root = Path(r".\\")
-    # ...
+    root = Path(r"D:\UserFolders\Documents\Scanned Documents\\")
+    split_pdf(root / "DOC_20230804_0004.pdf", [list(range(5))])

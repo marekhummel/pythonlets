@@ -34,7 +34,7 @@ def import_session(loader):
 
 
 # Create instance
-loader = il.Instaloader(
+loader = il.Instaloader(  # type: ignore
     download_video_thumbnails=False,
     save_metadata=False,
     filename_pattern="{date_utc}",
@@ -46,5 +46,5 @@ loader = il.Instaloader(
 user = import_session(loader)
 
 # Update path and download
-loader.dirname_pattern = f"out/instagram/{user}/saved/"
+loader.dirname_pattern = "_out/instagram/"
 loader.download_saved_posts()  # post_filter=lambda item: item.date_utc > datetime(2022, 12, 3))

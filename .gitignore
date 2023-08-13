@@ -1,6 +1,7 @@
 .vscode/
 __pycache__/
-out/
+_creds/
+_out/
 log.txt
 config.cfg
 validate_backup/*.json
