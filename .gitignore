@@ -4,5 +4,5 @@ _creds/
 _out/
 log.txt
 config.cfg
-validate_backup/*.json
-validate_backup/check/
+tools/validate_backup/*.json
+tools/validate_backup/check/

@@ -132,9 +132,9 @@ def group_files(files: list[str]) -> dict:
 if __name__ == "__main__":
     # Start
     start = perf_counter()
-    hash_path = Path(r".\validate_backup\hashes.json")
-    target_path = Path(r".\validate_backup\not_found.json")
-    check_path = Path(r".\validate_backup\check\\")
+    hash_path = Path(r".\tools\validate_backup\hashes.json")
+    target_path = Path(r".\tools\validate_backup\not_found.json")
+    check_path = Path(r".\tools\validate_backup\check\\")
 
     # Check paths
     if os.path.exists(check_path):
