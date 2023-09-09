@@ -112,13 +112,13 @@ def _trim_image(file: Path, dpi=None, bbox_man: tuple[int, int, int, int] | None
     return None
 
 
-def rotate_image(file: Path, angle: int):
+def rotate_image(file: Path, angle: int) -> None:
     """Rotate jpg by x degrees"""
     file_in, file_out = _backup_original(file)
 
     im = Image.open(file_in)
     dpi = im.info["dpi"]
-    im.rotate(angle).save(file_out, dpi=dpi)
+    im.rotate(angle, expand=True).save(file_out, dpi=dpi)
 
 
 def _backup_original(file: Path) -> tuple[Path, Path]:
@@ -128,5 +128,5 @@ def _backup_original(file: Path) -> tuple[Path, Path]:
 
 
 if __name__ == "__main__":
-    root = Path(r"D:\UserFolders\Documents\Scanned Documents\\")
-    split_pdf(root / "DOC_20230804_0004.pdf", [list(range(5))])
+    root = Path(r".\\")
+    # ...
