@@ -73,11 +73,19 @@ def eval_hints(guess, solution):
 
 
 def compute_solution_space():
-    return [tpl for tpl in product(DOMAIN, repeat=IMAGE_SIZE) if (ALLOW_DUPLICATES or is_set(tpl))]
+    return [
+        tpl
+        for tpl in product(DOMAIN, repeat=IMAGE_SIZE)
+        if (ALLOW_DUPLICATES or is_set(tpl))
+    ]
 
 
 def compute_solutions(solution_space, guesses):
-    return [s for s in solution_space if all(eval_hints(g, s) == (p, v) for g, p, v in guesses)]
+    return [
+        s
+        for s in solution_space
+        if all(eval_hints(g, s) == (p, v) for g, p, v in guesses)
+    ]
 
 
 def main_print_solutions():
@@ -91,7 +99,11 @@ def main_print_solutions():
 
 def main_iterative():
     solution_space = compute_solution_space()
-    response_space = [(p, v) for p, v in product(range(IMAGE_SIZE + 1), repeat=2) if p + v <= IMAGE_SIZE]
+    response_space = [
+        (p, v)
+        for p, v in product(range(IMAGE_SIZE + 1), repeat=2)
+        if p + v <= IMAGE_SIZE
+    ]
 
     while True:
         guess = compute_next_guess(solution_space, response_space)
@@ -101,7 +113,7 @@ def main_iterative():
         if not resp:
             break
 
-        p, v = [int(x) for x in resp.split()]
+        p, v = (int(x) for x in resp.split())
         GUESSES.append((guess, p, v))
 
 

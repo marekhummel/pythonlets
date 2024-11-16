@@ -19,7 +19,9 @@ def ping():
         f.seek(0, 0)
         f.write(line.rstrip("\r\n") + "\n")
 
-        diff = datetime.now() - datetime.strptime(content.split("\n")[0][1:27], "%Y-%m-%d %H:%M:%S.%f")
+        diff = datetime.now() - datetime.strptime(
+            content.split("\n")[0][1:27], "%Y-%m-%d %H:%M:%S.%f"
+        )
         if diff.seconds // 3600 > 5:
             f.write("\n")
 

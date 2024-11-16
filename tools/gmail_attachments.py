@@ -1,13 +1,15 @@
+import re
+from os.path import splitext
+from pathlib import Path
+
+from dateutil import parser  # type: ignore
 from simplegmail import Gmail
 from simplegmail.query import construct_query
-from pathlib import Path
-import re
-from dateutil import parser  # type: ignore
 from tqdm import tqdm
-from os.path import splitext
 
-
-gmail = Gmail(client_secret_file="_creds/client_secret.json", creds_file="_creds/gmail_token.json")
+gmail = Gmail(
+    client_secret_file="_creds/client_secret.json", creds_file="_creds/gmail_token.json"
+)
 sender_mail_rgx = re.compile(r".* <(?P<mail>.+)>|(?P<mailonly>.+)")
 filename_rgx = re.compile(r"[^a-zA-Z0-9-_äöüÄÖÜß]")
 
@@ -19,7 +21,9 @@ query = {
     # "after": "2020/01/01",
     "exclude_spec_attachment": [["ics"], ["smime.p7s"], ["asc"], ["OpenPGP_signature"]],
 }
-msgs = gmail.get_messages(query=construct_query(query), attachments="reference", include_spam_trash=False)
+msgs = gmail.get_messages(
+    query=construct_query(query), attachments="reference", include_spam_trash=False
+)
 
 print(f"Found {len(msgs)} messages with attachments")
 
@@ -35,7 +39,9 @@ for m in tqdm(msgs):
         errors.append(f"Can't identify sender: '{m.sender}' in '{m.subject}'")
         continue
 
-    sender = (sender_match.group("mail") or sender_match.group("mailonly")).replace("@", "_at_")
+    sender = (sender_match.group("mail") or sender_match.group("mailonly")).replace(
+        "@", "_at_"
+    )
     sender = filename_rgx.sub("_", sender)
     sender_path = out_path / sender
     sender_path.mkdir(exist_ok=True)

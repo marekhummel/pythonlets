@@ -19,10 +19,10 @@ class FiboMinHeap:
             return None
 
         # Distribute children to root list (and remove min)
-        minRoot = self._rootlist.pop(self._front)
-        for child in minRoot.children:
+        min_root = self._rootlist.pop(self._front)
+        for child in min_root.children:
             self._rootlist.append(child)
-        minRoot.children = []
+        min_root.children = []
 
         # Merge, so that each root has a different degree
         degree_map = [None] * len(self._rootlist)
@@ -47,7 +47,7 @@ class FiboMinHeap:
             self._extend_nodelist(new_root)
 
         # Get result (and remove lookup)
-        elem = minRoot.value[1]
+        elem = min_root.value[1]
         self._node_lookup[elem] = None
         return elem
 

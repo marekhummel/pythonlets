@@ -20,7 +20,7 @@ for _ in tqdm(range(max_iter)):
         coprimes += 1
 
 empprob = coprimes / max_iter
-print("Iterations: {0}".format(max_iter))
-print("Coprimes: {0}".format(coprimes))
-print("Emp. Probability: {0}".format(empprob))
-print("PI Approx.: {0}".format(math.sqrt(6 / empprob)))
+print(f"Iterations: {max_iter}")
+print(f"Coprimes: {coprimes}")
+print(f"Emp. Probability: {empprob}")
+print(f"PI Approx.: {math.sqrt(6 / empprob)}")

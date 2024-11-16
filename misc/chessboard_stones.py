@@ -52,12 +52,20 @@ def set_stone(n: int, bounds: Bounds, whites: Whites, progress: Progress) -> Res
         for i, pt in enumerate(possible):
             # Set and continue with next stone
             new_whites = {**whites, pt: n}
-            new_bounds = Bounds(min(bounds.xl, pt.x), max(bounds.xh, pt.x), min(bounds.yl, pt.y), max(bounds.yh, pt.y))
+            new_bounds = Bounds(
+                min(bounds.xl, pt.x),
+                max(bounds.xh, pt.x),
+                min(bounds.yl, pt.y),
+                max(bounds.yh, pt.y),
+            )
             result = set_stone(
                 n + 1,
                 new_bounds,
                 new_whites,
-                Progress(progress.low + i * progress_range, progress.low + (i + 1) * progress_range),
+                Progress(
+                    progress.low + i * progress_range,
+                    progress.low + (i + 1) * progress_range,
+                ),
             )
 
             # Update best

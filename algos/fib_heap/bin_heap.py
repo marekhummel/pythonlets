@@ -21,7 +21,12 @@ class BinaryMinHeap:
             if left >= len(self._data):
                 break
 
-            lower = left if right >= len(self._data) or self._data[left][0] <= self._data[right][0] else right
+            lower = (
+                left
+                if right >= len(self._data)
+                or self._data[left][0] <= self._data[right][0]
+                else right
+            )
 
             if self._data[lower][0] < self._data[current][0]:
                 self._swap(lower, current)

@@ -7,9 +7,11 @@ spaces = [0] * 40
 curr = 0
 doubles = 0
 
+# fmt: off
 dice = [i + j for j in range(1, 7) for i in range(1, 7)]
 communities = [0, 10] + [-1] * 14
 chances = [0, 24, 11, "UTILITY", "RAILROAD", "RAILROAD", -1, "BACK", 10, -1, -1, 5, 39, -1, -1, -1]  # noqa
+# fmt: on
 random.shuffle(communities)
 random.shuffle(chances)
 

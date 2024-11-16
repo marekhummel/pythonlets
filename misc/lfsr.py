@@ -36,7 +36,7 @@ def feedback3(s):
     return ((s >> 0) ^ (s >> 1) ^ (s >> 2) ^ (s >> 7)) & 1
 
 
-start = "{:0b}".format((1 << 127) | 1)
+start = f"{(1 << 127) | 1:0b}"
 print(start)
 out = lsfr(start, feedback3)
 print(out)

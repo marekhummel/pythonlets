@@ -20,7 +20,7 @@ def low(length):
     dl = 1
     while True:
         # print(dl)
-        gen = genNum(dl)
+        gen = gen_num(dl)
         for ds in gen:
             n = sum([d * 10 ** (len(ds) - i - 1) for i, d in enumerate(ds)])
             if per(n) == length:
@@ -31,7 +31,7 @@ def low(length):
 
 # Generates a list of ascending numbers, which are worth testing
 # (i.e skip 25 because it'll lead to 0 in 2 steps)
-def genNum(len, curr=[]):
+def gen_num(len, curr=[]):
     if len == 0:
         yield curr
         return
@@ -39,7 +39,7 @@ def genNum(len, curr=[]):
     def next(n):
         # Only return numbers where the digits are sorted
         if curr == [] or curr[-1] <= n:
-            return list(genNum(len - 1, curr + [n]))
+            return list(gen_num(len - 1, curr + [n]))
         else:
             return []
 
@@ -65,8 +65,7 @@ def genNum(len, curr=[]):
         lst += next(8)
 
     lst += next(9)
-    for num in lst:
-        yield num
+    yield from lst
 
 
 # Test

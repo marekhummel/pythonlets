@@ -32,4 +32,17 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-line-length = 120
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = ["F", "E", "W", "I", "N", "LOG", "SIM", "UP"]
+extend-ignore = [
+    "E741", # Allow usage of ambigious variable names (i, l, o)
+    "E731", # Allow assignment of lambda function
+    "SIM102", # Allow nested ifs, even though they could be merged with an AND
+    "UP014", # Format NamedTuples as classes
+]
+exclude = ["tools/img_dating/*.py"]
+
+[tool.mypy]
+exclude = ["_creds/", "_out/"]

@@ -69,7 +69,7 @@ def aes_round(block, key, last: bool = False):
 
 
 def sub_bytes(block):
-    Sbox = (
+    sbox = (
         0x63,
         0x7C,
         0x77,
@@ -327,7 +327,7 @@ def sub_bytes(block):
         0xBB,
         0x16,
     )
-    return [AESNum(Sbox[b._val]) for b in block]
+    return [AESNum(sbox[b._val]) for b in block]
 
 
 def shift_rows(block):  # confusion
@@ -337,11 +337,13 @@ def shift_rows(block):  # confusion
 
 
 def mix_columns(block):
-    MC = [AESNum(x) for x in [2, 1, 1, 3, 3, 2, 1, 1, 1, 3, 2, 1, 1, 1, 3, 2]]
+    mc = [AESNum(x) for x in [2, 1, 1, 3, 3, 2, 1, 1, 1, 3, 2, 1, 1, 1, 3, 2]]
     new_block = [None] * 16
     for r in range(4):
         for c in range(4):
-            new_block[c * 4 + r] = sum(MC[i * 4 + r] * block[c * 4 + i] for i in range(4))
+            new_block[c * 4 + r] = sum(
+                mc[i * 4 + r] * block[c * 4 + i] for i in range(4)
+            )
     return new_block
 
 

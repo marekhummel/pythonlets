@@ -1,6 +1,6 @@
 from datetime import datetime
 
-NONE, BOX, SPACE = "?", "\u25FC", "\u00B7"
+NONE, BOX, SPACE = "?", "\u25fc", "\u00b7"
 
 
 def solve(nonogram):

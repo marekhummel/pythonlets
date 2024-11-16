@@ -72,7 +72,11 @@ class Sudoku:
     # -- Returns list of all rows, columns and boxes --
 
     def get_all_groups(self):
-        return list(self.get_all_rows()) + list(self.get_all_columns()) + list(self.get_all_boxes())  # noqa
+        return (
+            list(self.get_all_rows())
+            + list(self.get_all_columns())
+            + list(self.get_all_boxes())
+        )
 
     # Read from string
     def read(self, s):
@@ -85,11 +89,10 @@ class Sudoku:
 
     # Checks if the sudoku is solvable
     def is_valid(self):
-        for cell in sum(self.cells, []):
-            if cell.value == 0 and len(cell.candidates) == 0:
-                return False
-
-        return True
+        return all(
+            not (cell.value == 0 and len(cell.candidates) == 0)
+            for cell in sum(self.cells, [])
+        )
 
     # Clone
     def clone(self):
@@ -128,7 +131,9 @@ class Sudoku:
     def hidden_single(self):
         for group in self.get_all_groups():
             for n in range(1, 10):
-                possible = [cell for cell in group if cell.value == 0 and n in cell.candidates]
+                possible = [
+                    cell for cell in group if cell.value == 0 and n in cell.candidates
+                ]
                 if len(possible) == 1:
                     cell = possible[0]
                     self.update_cell(cell.row, cell.column, n)
@@ -164,7 +169,10 @@ class Sudoku:
     # the candidate can be removed in every other cell in the box and line
     # //checked by lines, removes in boxes only
     def line_box_interaction(self):
-        lines = [list(ln) for ln in (list(self.get_all_columns()) + list(self.get_all_rows()))]
+        lines = [
+            list(ln)
+            for ln in (list(self.get_all_columns()) + list(self.get_all_rows()))
+        ]
         for line in lines:
             for n in (n for n in range(1, 10)):
                 # Cells where n is still possible
