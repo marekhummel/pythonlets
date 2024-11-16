@@ -33,6 +33,19 @@ def split_pdf(file: Path, slices: list[list[int]]) -> None:
             pdf_writer.write(fh)
 
 
+def shorten_pdf(file: Path, remove_pages: list[int]) -> None:
+    """remove specific pages from pdf"""
+    pdf_writer = PdfWriter()
+
+    pdf_reader = PdfReader(root / file, strict=False)
+    for i, page in enumerate(pdf_reader.pages):
+        if (i + 1) not in remove_pages:
+            pdf_writer.add_page(page)
+
+    with open(file.with_stem(f"{file.stem}_shortened"), "wb") as fh:
+        pdf_writer.write(fh)
+
+
 def rotate_pdf(file: Path, angle_cw: int):
     file_in, file_out = _backup_original(file)
 
@@ -65,7 +78,11 @@ def images_to_pdf(root: Path, image_files: list[str], output: str) -> None:
     pdf.output(str(root / output))
 
 
-def trim_pages_pdf(file: Path, deleteTempFiles: bool = True, bbox: tuple[int, int, int, int] | None = None):
+def trim_pages_pdf(
+    file: Path,
+    delete_temp_files: bool = True,
+    bbox: tuple[int, int, int, int] | None = None,
+):
     """Applies the trim function on pages of a pdf"""
     pdf_file_in, pdf_file_out = _backup_original(file)
     directory = file.parent
@@ -80,15 +97,19 @@ def trim_pages_pdf(file: Path, deleteTempFiles: bool = True, bbox: tuple[int, in
         page.save(pdf_file_in.parent / img_name, "JPEG")
 
         trimmed_image_file = _trim_image(directory / img_name, (dpi, dpi), bbox)
-        trimmed_images.append(trimmed_image_file.name if trimmed_image_file else img_name)
+        trimmed_images.append(
+            trimmed_image_file.name if trimmed_image_file else img_name
+        )
 
     images_to_pdf(pdf_file_in.parent, trimmed_images, pdf_file_out.name)
-    if deleteTempFiles:
+    if delete_temp_files:
         for img in set(images + trimmed_images):
             os.remove(img)
 
 
-def _trim_image(file: Path, dpi=None, bbox_man: tuple[int, int, int, int] | None = None) -> Path | None:
+def _trim_image(
+    file: Path, dpi=None, bbox_man: tuple[int, int, int, int] | None = None
+) -> Path | None:
     """Trim background from image"""
     im = Image.open(file)
     dpi = dpi or im.info["dpi"]
