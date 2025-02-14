@@ -7,14 +7,26 @@ from PIL import Image, ImageChops
 from pypdf import PdfReader, PdfWriter
 
 
-def merge_pdfs(root: Path, files: list[str], output: str) -> None:
+def merge_pdfs(
+    root: Path,
+    files: list[str],
+    output: str,
+    mapping: list[tuple[int, list[int]]] | None = None,
+) -> None:
     """Merge pdf files to one"""
     pdf_writer = PdfWriter()
 
-    for path in files:
-        pdf_reader = PdfReader(root / path, strict=False)
-        for page in pdf_reader.pages:
-            pdf_writer.add_page(page)
+    if mapping is None:
+        for path in files:
+            pdf_reader = PdfReader(root / path, strict=False)
+            for page in pdf_reader.pages:
+                pdf_writer.add_page(page)
+    else:
+        for file_idx, pages in mapping:
+            file = files[file_idx - 1]
+            pdf_reader = PdfReader(root / file, strict=False)
+            for page_idx in pages:
+                pdf_writer.add_page(pdf_reader.get_page(page_idx - 1))
 
     with open(root / output, "wb") as fh:
         pdf_writer.write(fh)
