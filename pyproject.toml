@@ -22,7 +22,6 @@ pypdf = "^4.2.0"
 simplegmail = "^4.1.1"
 dacite = "^1.8.1"
 
-
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.9"
 mypy = "^1.10.0"
@@ -34,7 +33,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-line-length = 88
+line-length = 99
 
 [tool.ruff.lint]
 extend-select = ["F", "E", "W", "I", "N", "LOG", "SIM", "UP"]

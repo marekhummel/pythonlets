@@ -1,9 +1,8 @@
 import os
 from pathlib import Path
 
-from fpdf import FPDF
 from pdf2image import convert_from_path  # type: ignore
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageFile
 from pypdf import PdfReader, PdfWriter
 
 
@@ -76,18 +75,37 @@ def rotate_pdf(file: Path, angle_cw: int):
 
 
 def images_to_pdf(root: Path, image_files: list[str], output: str) -> None:
-    """List of jpg files to pdf"""
-    pdf = FPDF(unit="pt")
+    """List of image files to pdf"""
+    images = []
 
-    for page in image_files:
-        img_path = root / page
+    for image_file in image_files:
+        img_path = root / image_file
+        img: Image.Image | ImageFile.ImageFile = Image.open(img_path)
 
-        cover = Image.open(img_path)
-        width, height = cover.size
-        pdf.add_page(format=(width, height))
-        pdf.image(img_path, 0, 0)
+        # new_size = (img.size[0] // 2, img.size[1] // 2)
+        # img = img.resize(new_size, Image.Resampling.LANCZOS)
 
-    pdf.output(str(root / output))
+        # Convert RGBA to RGB if necessary
+        if img.mode == "RGBA":
+            # Create a white background
+            background = Image.new("RGB", img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])  # Use alpha channel as mask
+            img = background
+        elif img.mode != "RGB":
+            img = img.convert("RGB")
+
+        images.append(img)
+
+    if images:
+        # Save first image and append the rest
+        output_path = root / output
+        images[0].save(
+            output_path,
+            save_all=True,
+            append_images=images[1:] if len(images) > 1 else [],
+            resolution=100.0,
+            quality=95,
+        )
 
 
 def trim_pages_pdf(
@@ -109,9 +127,7 @@ def trim_pages_pdf(
         page.save(pdf_file_in.parent / img_name, "JPEG")
 
         trimmed_image_file = _trim_image(directory / img_name, (dpi, dpi), bbox)
-        trimmed_images.append(
-            trimmed_image_file.name if trimmed_image_file else img_name
-        )
+        trimmed_images.append(trimmed_image_file.name if trimmed_image_file else img_name)
 
     images_to_pdf(pdf_file_in.parent, trimmed_images, pdf_file_out.name)
     if delete_temp_files:
