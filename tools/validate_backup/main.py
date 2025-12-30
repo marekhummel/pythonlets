@@ -6,20 +6,29 @@ import json
 import os
 import os.path
 import shutil
-from time import perf_counter
+from collections.abc import Iterator
+from fnmatch import fnmatch
 from pathlib import Path
-from typing import Any, Iterator
+from time import perf_counter
 
-DATA_PATH = Path(r"D:\OneDrive\Phone Media\WhatsApp")
-BACKUP_PATH = Path(r"D:\OneDrive\Pictures")
-IGNORED = []  # ["FOUND.000", "System Volume Information", ".Spotlight-V100"]
+# Check what files in DATA_PATH (excluding IGNORED) are already present in BACKUP_PATH
+DATA_PATH = Path(r"$WINHOME/Downloads/Bilder")
+BACKUP_PATH = Path(r"$WINHOME/OneDrive/Pictures")
+IGNORED = [
+    "**/Thumbs.db",
+    "**/.hps-metadata",
+    "**/mxfilerelatedcache.mxc2",
+    "FOUND.000",
+    "System Volume Information",
+    ".Spotlight-V100",
+]
 
 
 def get_file_iterator(root: Path) -> Iterator[Path]:
     return (Path(currentpath) / f for currentpath, _, files in os.walk(root) for f in files)
 
 
-def get_hashdict(file_path: Path, hashlist_path: Path) -> set[str | None]:
+def get_hashdict(file_path: Path, hashlist_path: Path) -> dict[str | None, Path]:
     print(f"Update hashdict of {file_path}")
     all_files = list(get_file_iterator(file_path))
 
@@ -38,11 +47,11 @@ def get_hashdict(file_path: Path, hashlist_path: Path) -> set[str | None]:
     with hashlist_path.open("w", encoding="utf-8") as f:
         json.dump({str(p): h for p, h in hashlist.items()}, f)
 
-    return set(hashlist.values())
+    return {v: k for k, v in hashlist.items()}
 
 
 def compute_file_hash(file: Path) -> str | None:
-    BLOCK_SIZE = 65536
+    BLOCK_SIZE = 65536  # noqa: N806
 
     file_hash = hashlib.md5()
     try:
@@ -58,26 +67,40 @@ def compute_file_hash(file: Path) -> str | None:
         return None
 
 
-def check_data(data_path: Path, hashset: set[str | None], ignored: list[str]) -> list[Path]:
+def should_ignore(path: Path, data_path: Path, ignored_patterns: list[str]) -> bool:
+    rel_path_str = str(path.relative_to(data_path)).replace("\\", "/")
+
+    return any(fnmatch(rel_path_str, pattern) for pattern in ignored_patterns)
+
+
+def check_data(
+    data_path: Path, hashdict: dict[str | None, Path], ignored: list[str]
+) -> list[Path]:
     print("Check files")
-    abs_ignored = [os.path.join(data_path, i) for i in ignored]
 
     total = 0
     not_found = []
     not_found_count = 0
     with cf.ProcessPoolExecutor() as executor:
         for currentpath, _, files in os.walk(data_path):
-            if currentpath in abs_ignored:
-                print(f" - {currentpath} is skipped")
+            current_path_obj = Path(currentpath)
+
+            # Check if current directory should be ignored
+            if should_ignore(current_path_obj, data_path, ignored):
+                # print(f" - {current_path_obj.relative_to(data_path)} is skipped")
                 continue
 
+            # Filter out ignored files
             fullfiles = [Path(currentpath) / f for f in files]
+            fullfiles = [f for f in fullfiles if not should_ignore(f, data_path, ignored)]
             total += len(fullfiles)
 
             hashed_files = [
-                (f, h) for f, h in zip(fullfiles, executor.map(compute_file_hash, fullfiles)) if h is not None
+                (f, h)
+                for f, h in zip(fullfiles, executor.map(compute_file_hash, fullfiles))
+                if h is not None
             ]
-            current_not_found = [f for f, file_hash in hashed_files if file_hash not in hashset]
+            current_not_found = [f for f, file_hash in hashed_files if file_hash not in hashdict]
 
             not_found_count += len(current_not_found)
             if len(current_not_found) == len(hashed_files) and current_not_found:
@@ -106,25 +129,76 @@ def copy_not_found(root, files, check_path):
             shutil.copy2(f, target)
 
 
-def group_files(files: list[str]) -> dict:
-    split_files = [f.rstrip().split("\\", 1) for f in files]
-
-    groups: dict[str, list[str]] = {}
-    curr_files: list[str] = []
-    for f in split_files:
-        if len(f) == 1:
-            curr_files.append(f[0])
-        else:
-            grp = f[0]
-            if grp not in groups:
-                groups[grp] = []
-            groups[grp].append(f[1])
-
+def group_files(paths: list[tuple[Path, bool]]) -> dict:
     hierarchy: dict = {}
-    if curr_files:
-        hierarchy["%%files%%"] = curr_files
-    for g, vals in groups.items():
-        hierarchy[g] = group_files(vals)
+
+    # Separate directories from files
+    directories = [f for f, is_dir in paths if is_dir]
+    files = [f for f, is_dir in paths if not is_dir]
+
+    # Group regular files by their first directory component
+    files_by_first_dir: dict[str, list[Path]] = {}
+    current_level_files: list[str] = []
+
+    for f in files:
+        parts = f.parts
+        if len(parts) == 0:
+            continue
+        elif len(parts) == 1:
+            # File at current level
+            current_level_files.append(parts[0])
+        else:
+            # File in subdirectory
+            first_dir = parts[0]
+            if first_dir not in files_by_first_dir:
+                files_by_first_dir[first_dir] = []
+            files_by_first_dir[first_dir].append(Path(*parts[1:]))
+
+    # Group directories by their first component
+    dirs_by_first_component: dict[str, list[Path]] = {}
+    current_level_dirs: list[str] = []
+
+    for d in directories:
+        parts = d.parts
+        if len(parts) == 0:
+            continue
+        elif len(parts) == 1:
+            # Entire directory at this level is missing
+            current_level_dirs.append(parts[0])
+        else:
+            # Subdirectory
+            first_dir = parts[0]
+            if first_dir not in dirs_by_first_component:
+                dirs_by_first_component[first_dir] = []
+            dirs_by_first_component[first_dir].append(Path(*parts[1:]))
+
+    # Add files at current level
+    if current_level_files:
+        hierarchy["%%files%%"] = sorted(current_level_files)
+
+    # Recursively process subdirectories
+    all_subdirs = set(files_by_first_dir.keys()) | set(dirs_by_first_component.keys())
+
+    # Add entire directories that are missing at current level (no subdirs)
+    for dir_name in sorted(current_level_dirs):
+        if dir_name not in all_subdirs:
+            # This directory has no subdirectories, mark it as completely missing
+            hierarchy[dir_name] = {"%%files%%": "*.*"}
+
+    # Process subdirectories
+    for subdir in sorted(all_subdirs):
+        subfiles = files_by_first_dir.get(subdir, [])
+        subdirs = dirs_by_first_component.get(subdir, [])
+        # Create tuples with is_directory flag
+        combined = [(f, False) for f in subfiles] + [(d, True) for d in subdirs]
+        sub_hierarchy = group_files(combined)
+
+        # If this directory was marked as having all its direct files missing,
+        # add that marker to the hierarchy
+        if subdir in current_level_dirs:
+            sub_hierarchy["%%files%%"] = "*.*"
+
+        hierarchy[subdir] = sub_hierarchy
 
     return hierarchy
 
@@ -132,24 +206,33 @@ def group_files(files: list[str]) -> dict:
 if __name__ == "__main__":
     # Start
     start = perf_counter()
-    hash_path = Path(r".\tools\validate_backup\hashes.json")
-    target_path = Path(r".\tools\validate_backup\not_found.json")
-    check_path = Path(r".\tools\validate_backup\check\\")
+    hash_path = Path(r"./tools/validate_backup/hashes.json")
+    target_path = Path(r"./tools/validate_backup/not_found.json")
+    check_path = Path(r"./tools/validate_backup/check/")
 
     # Check paths
     if os.path.exists(check_path):
         print("Remove check folder")
         exit(1)
 
-    # Check
+    # Hash backup
     backup_hashes = get_hashdict(BACKUP_PATH, hash_path)
+
+    # Single test
+    # h = compute_file_hash(DATA_PATH / "test.jpg")
+    # print(backup_hashes.get(h))
+    # exit(0)
+
+    # Check all
     files = check_data(DATA_PATH, backup_hashes, IGNORED)
 
     # Copy not found
     # copy_not_found(DATA_PATH, files, check_path)
 
     # Create lookup
-    hierarchy = group_files([str(p) for p in files])
+    # Check if directory BEFORE converting to relative path
+    relative_files = [(f.relative_to(DATA_PATH), f.is_dir()) for f in files]
+    hierarchy = group_files(relative_files)
     with open(target_path, mode="w", encoding="utf-8") as f:
         json.dump(hierarchy, f, indent=4, separators=(", ", ": "), sort_keys=True)
 
