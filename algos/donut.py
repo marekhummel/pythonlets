@@ -1,7 +1,8 @@
+# pyright: reportPossiblyUnboundVariable=false
 while (
     ("o_" in dir())
-    or (A := (0))
-    or (B := 0)
+    or (A := (0.0))
+    or (B := 0.0)
     or print("\x1b[2J")
     or not (sin := (__import__("math")).sin)
     or not (cos := __import__("math").cos)
@@ -41,15 +42,7 @@ while (
                     for (o, N) in [
                         (
                             x + 80 * y,
-                            int(
-                                8
-                                * (
-                                    (f * e - c * d * g) * m
-                                    - c * d * e
-                                    - f * g
-                                    - l * d * n
-                                )
-                            ),
+                            int(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n)),
                         )
                     ]
                     if 0 < x < 80 and 22 > y > 0

@@ -5,7 +5,7 @@ from typing import Self
 
 class Sandpile:
     def __init__(self, values: list[int], size: int = 3) -> None:
-        assert len(values) == size * size, f"Need {size*size} values for sandpile"
+        assert len(values) == size * size, f"Need {size * size} values for sandpile"
         assert all(0 <= x <= 3 for x in values), "Values may only range from 0 to 3"
 
         self.size = size

@@ -11,7 +11,7 @@ class Luhn:
     def validate(self, cc: str) -> bool:
         return self._compute_total(cc) % 10 == 0
 
-    def compute(self, cc: str) -> int:
+    def compute(self, cc: str) -> int | None:
         total = self._compute_total(cc)
         if len(cc) & 1:
             return (total // 10 + 1) * 10 - total

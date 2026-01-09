@@ -1,7 +1,7 @@
 # Numberphile: https://www.youtube.com/watch?v=rBU9E-ZOZAI
 
 from collections import defaultdict
-from typing import Iterator
+from collections.abc import Iterator
 
 import matplotlib.pyplot as plt
 

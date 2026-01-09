@@ -19,9 +19,7 @@ def series_arctan(factor, x):
         chain.append(chain[-1] / (dx * dx))
 
     # Scale denominator to get 1/(i*x^i)
-    scaled_chain = [
-        c / (Decimal(2) * Decimal(i) + Decimal(1)) for i, c in enumerate(chain)
-    ]
+    scaled_chain = [c / (Decimal(2) * Decimal(i) + Decimal(1)) for i, c in enumerate(chain)]
 
     # Split into positives and negatives
     positives = scaled_chain[::2]

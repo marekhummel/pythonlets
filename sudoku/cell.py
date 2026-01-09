@@ -24,4 +24,5 @@ class Cell:
         return " " if self.value == 0 else str(self.value)
 
     def __repr__(self):
-        return f"Cell({self.row!r}|{self.column!r} => {self.value if self.value != 0 else self.candidates!r})"
+        val = f"{self.value}" if self.value != 0 else f"{self.candidates!r}"
+        return f"Cell({self.row!r}|{self.column!r} => {val})"

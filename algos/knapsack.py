@@ -28,11 +28,7 @@ def knapsack_ads(items, B):
 
     lasti = len(items) - 1
     return next(
-        (
-            (t, *A[lasti][t])
-            for t in range(max_profit - 1, -1, -1)
-            if A[lasti][t][1] != B + 1
-        ),
+        ((t, *A[lasti][t]) for t in range(max_profit - 1, -1, -1) if A[lasti][t][1] != B + 1),
         -1,
     )
 

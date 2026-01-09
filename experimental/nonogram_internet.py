@@ -101,10 +101,7 @@ def deduce(hr, vr):
 
 
 def solve(s, show_runs=True):
-    s = [
-        [[ord(c) - ord("A") + 1 for c in w] for w in ln.split()]
-        for ln in s.splitlines()
-    ]
+    s = [[[ord(c) - ord("A") + 1 for c in w] for w in ln.split()] for ln in s.splitlines()]
     if show_runs:
         print("Horizontal runs:", s[0])
         print("Vertical runs:", s[1])

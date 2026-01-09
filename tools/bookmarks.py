@@ -1,8 +1,8 @@
-""" Extracts links from firefox bookmarks json """
+"""Extracts links from firefox bookmarks json"""
 
-from collections import namedtuple
 import json
 import re
+from collections import namedtuple
 
 Uri = namedtuple("Uri", ["title", "uri"])
 

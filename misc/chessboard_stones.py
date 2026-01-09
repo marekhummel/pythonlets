@@ -17,7 +17,9 @@ PRINT_CURRENT_BEST = True
 
 browns = [Point(0, 0), Point(2, 2)]
 # browns = [Point(0, 0), Point(4, 2), Point(6, 4), Point(9, 2)]
-# browns = [Point(0, 0), Point(3, 2), Point(2, -2), Point(5, -5), Point(8, -6), Point(11, -9)]  # takes long, 15min
+
+# takes long, 15min
+# browns = [Point(0, 0), Point(3, 2), Point(2, -2), Point(5, -5), Point(8, -6), Point(11, -9)]
 
 
 def set_stone(n: int, bounds: Bounds, whites: Whites, progress: Progress) -> Result:

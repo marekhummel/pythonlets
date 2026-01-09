@@ -1,6 +1,6 @@
-from time import sleep
-from random import random
 from decimal import Decimal, getcontext
+from random import random
+from time import sleep
 
 getcontext().prec = 3
 

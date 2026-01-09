@@ -12,12 +12,13 @@ def ping():
     rrts = [int(i) for i in ms]
     nums = [str(i).rjust(3, " ") for i in rrts]
 
-    line = f"[{datetime.now()}]:\tMinimum = {nums[0]}ms | Maximum = {nums[1]}ms | Average = {nums[2]}ms\r\n"
+    times = " | ".join([f"{name} = {num}ms" for name, num in zip(["Min", "Max", "Avg"], nums)])
+    line = f"[{datetime.now()}]:\t{times}"
     path = os.path.join(os.path.realpath(__file__), "..", "log.txt")
     with open(path, "r+") as f:
         content = f.read()
         f.seek(0, 0)
-        f.write(line.rstrip("\r\n") + "\n")
+        f.write(line + "\n")
 
         diff = datetime.now() - datetime.strptime(
             content.split("\n")[0][1:27], "%Y-%m-%d %H:%M:%S.%f"

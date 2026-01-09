@@ -1,6 +1,6 @@
-from turtle import Turtle, Screen, mainloop, pencolor
-from math import sqrt
 from itertools import tee
+from math import sqrt
+from turtle import Screen, Turtle, mainloop
 
 # L-system set up
 

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 import requests
 from dacite import from_dict
 

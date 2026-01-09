@@ -1,9 +1,9 @@
+from collections.abc import Iterator
 from itertools import count
 from math import sqrt
-from typing import Iterator, List, Tuple
 
 
-def euler_totient_sieve(n: int) -> List[int]:
+def euler_totient_sieve(n: int) -> list[int]:
     """Combines sieve of eratostenes and euler totient function"""
     phi = [i for i in range(n + 1)]
     for p in range(2, n + 1):
@@ -180,7 +180,7 @@ def _get_miller_rabin_a_list(n):
     return None
 
 
-def prime_factors(n: int) -> Iterator[Tuple[int, int]]:
+def prime_factors(n: int) -> Iterator[tuple[int, int]]:
     """Computes prime factors of n as a list of tuples (p_i, k_i),
     so that n = prod(p_i**k_i)"""
     p = 2

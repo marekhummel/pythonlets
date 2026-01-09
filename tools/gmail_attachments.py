@@ -7,9 +7,7 @@ from simplegmail import Gmail
 from simplegmail.query import construct_query
 from tqdm import tqdm
 
-gmail = Gmail(
-    client_secret_file="_creds/client_secret.json", creds_file="_creds/gmail_token.json"
-)
+gmail = Gmail(client_secret_file="_creds/client_secret.json", creds_file="_creds/gmail_token.json")
 sender_mail_rgx = re.compile(r".* <(?P<mail>.+)>|(?P<mailonly>.+)")
 filename_rgx = re.compile(r"[^a-zA-Z0-9-_äöüÄÖÜß]")
 
@@ -39,9 +37,7 @@ for m in tqdm(msgs):
         errors.append(f"Can't identify sender: '{m.sender}' in '{m.subject}'")
         continue
 
-    sender = (sender_match.group("mail") or sender_match.group("mailonly")).replace(
-        "@", "_at_"
-    )
+    sender = (sender_match.group("mail") or sender_match.group("mailonly")).replace("@", "_at_")
     sender = filename_rgx.sub("_", sender)
     sender_path = out_path / sender
     sender_path.mkdir(exist_ok=True)

@@ -1,10 +1,6 @@
 import subprocess
 
-data = (
-    subprocess.check_output(["netsh", "wlan", "show", "profiles"])
-    .decode("utf-8")
-    .split("\n")
-)
+data = subprocess.check_output(["netsh", "wlan", "show", "profiles"]).decode("utf-8").split("\n")
 profiles = [i.split(":")[1][1:-1] for i in data if "All User Profile" in i]
 
 for i in profiles:
@@ -17,4 +13,4 @@ for i in profiles:
     try:
         print(f"{i:<30}|  {results[0]:<}")
     except IndexError:
-        print(f'{i:<30}|  {"":<}')
+        print(f"{i:<30}|  {'':<}")

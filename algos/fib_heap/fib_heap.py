@@ -1,9 +1,24 @@
-from typing import Any
+from typing import Any, Self
+
+
+class Node:
+    def __init__(self, value) -> None:
+        self.value = value
+        self.children: list[Node] = []
+        self.parent: Self | None = None
+        self.marked = False
+
+    def add_child(self, node: Self) -> None:
+        self.children.append(node)
+        node.parent = self
+
+    def degree(self) -> int:
+        return len(self.children)
 
 
 class FiboMinHeap:
-    _rootlist: list["Node"]
-    _node_lookup: dict[Any, "Node"]
+    _rootlist: list[Node]
+    _node_lookup: dict[Any, Node]
     _front: int
 
     def __init__(self) -> None:
@@ -32,6 +47,7 @@ class FiboMinHeap:
             merged = root
             while degree_map[deg] is not None:
                 current = degree_map[deg]
+                assert current
                 merged = self._merge_nodes(current, merged)
                 degree_map[deg] = None
                 deg += 1
@@ -83,27 +99,12 @@ class FiboMinHeap:
         if self._front == -1 or node.value[0] < self._rootlist[self._front].value[0]:
             self._front = len(self._rootlist) - 1
 
-    def _merge_nodes(self, node1: "Node", node2: "Node"):
+    def _merge_nodes(self, node1: Node, node2: Node):
         if node1.value[0] > node2.value[0]:
             node1, node2 = node2, node1
 
         node1.add_child(node2)
         return node1
-
-
-class Node:
-    def __init__(self, value) -> None:
-        self.value = value
-        self.children = []
-        self.parent = None
-        self.marked = False
-
-    def add_child(self, node: "Node") -> None:
-        self.children.append(node)
-        node.parent = self
-
-    def degree(self) -> int:
-        return len(self.children)
 
 
 if __name__ == "__main__":

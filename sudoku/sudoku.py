@@ -73,9 +73,7 @@ class Sudoku:
 
     def get_all_groups(self):
         return (
-            list(self.get_all_rows())
-            + list(self.get_all_columns())
-            + list(self.get_all_boxes())
+            list(self.get_all_rows()) + list(self.get_all_columns()) + list(self.get_all_boxes())
         )
 
     # Read from string
@@ -90,8 +88,7 @@ class Sudoku:
     # Checks if the sudoku is solvable
     def is_valid(self):
         return all(
-            not (cell.value == 0 and len(cell.candidates) == 0)
-            for cell in sum(self.cells, [])
+            not (cell.value == 0 and len(cell.candidates) == 0) for cell in sum(self.cells, [])
         )
 
     # Clone
@@ -131,9 +128,7 @@ class Sudoku:
     def hidden_single(self):
         for group in self.get_all_groups():
             for n in range(1, 10):
-                possible = [
-                    cell for cell in group if cell.value == 0 and n in cell.candidates
-                ]
+                possible = [cell for cell in group if cell.value == 0 and n in cell.candidates]
                 if len(possible) == 1:
                     cell = possible[0]
                     self.update_cell(cell.row, cell.column, n)
@@ -169,10 +164,7 @@ class Sudoku:
     # the candidate can be removed in every other cell in the box and line
     # //checked by lines, removes in boxes only
     def line_box_interaction(self):
-        lines = [
-            list(ln)
-            for ln in (list(self.get_all_columns()) + list(self.get_all_rows()))
-        ]
+        lines = [list(ln) for ln in (list(self.get_all_columns()) + list(self.get_all_rows()))]
         for line in lines:
             for n in (n for n in range(1, 10)):
                 # Cells where n is still possible
@@ -189,10 +181,10 @@ class Sudoku:
                     for c in box:
                         c.remove_candidate(n)
 
-    # Naked tuples (pairs, triples, quads) are a set of 2/3/4 candidates blocking 2/3/4 cells by being the only possible
-    # candidates in these cells
-    # Being in the same grp, although its unknown which belongs to which cell,
-    # it can be said for sure, that the candidates can be cancelled in every other cell in the same grp.
+    # Naked tuples (pairs, triples, quads) are a set of 2/3/4 candidates blocking 2/3/4 cells by
+    # being the only possible candidates in these cells
+    # Being in the same grp, although its unknown which belongs to which cell, it can be said
+    # for sure, that the candidates can be cancelled in every other cell in the same grp.
     def naked_tuple(self, n):
         assert 2 <= n <= 4
 

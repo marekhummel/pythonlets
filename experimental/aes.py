@@ -341,9 +341,7 @@ def mix_columns(block):
     new_block = [None] * 16
     for r in range(4):
         for c in range(4):
-            new_block[c * 4 + r] = sum(
-                mc[i * 4 + r] * block[c * 4 + i] for i in range(4)
-            )
+            new_block[c * 4 + r] = sum(mc[i * 4 + r] * block[c * 4 + i] for i in range(4))
     return new_block
 
 

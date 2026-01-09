@@ -1,9 +1,7 @@
-from typing import List, Tuple
-
-Color = Tuple[int, int, int]
+Color = tuple[int, int, int]
 
 
-def create_ppm_file(image: List[List[Color]], path: str, width: int, height: int):
+def create_ppm_file(image: list[list[Color]], path: str, width: int, height: int):
     with open(path, mode="w") as f:
         f.write("P3\n")
         f.write(f"{width} {height}\n")

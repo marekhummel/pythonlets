@@ -1,6 +1,3 @@
-from typing import Tuple
-
-
 class BinaryMinHeap:
     _data: list
 
@@ -23,8 +20,7 @@ class BinaryMinHeap:
 
             lower = (
                 left
-                if right >= len(self._data)
-                or self._data[left][0] <= self._data[right][0]
+                if right >= len(self._data) or self._data[left][0] <= self._data[right][0]
                 else right
             )
 
@@ -51,7 +47,7 @@ class BinaryMinHeap:
     def _get_parent(self, index) -> int:
         return (index - 1) // 2
 
-    def _get_children(self, index) -> Tuple[int, int]:
+    def _get_children(self, index) -> tuple[int, int]:
         return index * 2 + 1, index * 2 + 2
 
     def _swap(self, a, b) -> None:
