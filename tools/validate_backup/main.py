@@ -6,10 +6,11 @@ import json
 import os
 import os.path
 import shutil
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from fnmatch import fnmatch
 from pathlib import Path
 from time import perf_counter
+from typing import Any
 
 # Check what files in DATA_PATH (excluding IGNORED) are already present in BACKUP_PATH
 DATA_PATH = Path(r"$WINHOME/Downloads/Bilder")
@@ -129,7 +130,7 @@ def copy_not_found(root, files, check_path):
             shutil.copy2(f, target)
 
 
-def group_files(paths: list[tuple[Path, bool]]) -> dict:
+def group_files_old(paths: list[tuple[Path, bool]]) -> dict:
     hierarchy: dict = {}
 
     # Separate directories from files
@@ -201,6 +202,50 @@ def group_files(paths: list[tuple[Path, bool]]) -> dict:
         hierarchy[subdir] = sub_hierarchy
 
     return hierarchy
+
+
+def group_files(paths: Iterable[tuple[Path, bool]]) -> dict[str, Any]:
+    files_key = r"%files%"
+    default_all_files = "*.*"
+    root: dict[str, Any] = {}
+
+    # 1. Build tree structure
+    for path, is_dir in paths:
+        parts = path.parts
+        if not parts:
+            continue
+
+        node = root
+        for part in parts[:-1]:
+            node = node.setdefault(part, {})
+
+        name = parts[-1]
+
+        if is_dir:
+            node.setdefault(name, {})
+        else:
+            node.setdefault(files_key, []).append(name)
+
+    # 2. Post-process: mark empty directories
+    def _mark_empty_dirs(node: dict[str, Any]) -> bool:
+        """
+        Returns True if this subtree contains any real files.
+        """
+        has_files = files_key in node and bool(node[files_key])
+
+        for key, child in node.items():
+            if key == files_key:
+                continue
+            if _mark_empty_dirs(child):
+                has_files = True
+
+        if not has_files:
+            node.setdefault(files_key, [default_all_files])
+
+        return has_files
+
+    _mark_empty_dirs(root)
+    return root
 
 
 if __name__ == "__main__":
