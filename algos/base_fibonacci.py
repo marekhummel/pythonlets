@@ -39,7 +39,18 @@ def zeckendorf(n):
 
 
 if __name__ == "__main__":
-    n = 72
-    binary, decomp = zeckendorf(n)
-    print(f"{n} = {' + '.join(map(str, decomp))}")
-    print(f"Binary: {binary}")
+    # n = 72
+    # binary, decomp = zeckendorf(n)
+    # print(f"{n} = {' + '.join(map(str, decomp))}")
+    # print(f"Binary: {binary}")
+
+    n = 100
+    fibs = generate_fibonacci_up_to(n)
+    rows: dict[int, list[int]] = {f: [] for f in fibs}
+    for i in range(1, n + 1):
+        _, decomp = zeckendorf(i)
+        for f in decomp:
+            rows[f].append(i)
+
+    for r in sorted(rows):
+        print(f"{rows[r]}")
