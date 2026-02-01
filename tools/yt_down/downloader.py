@@ -6,7 +6,7 @@ from pytubefix import Playlist, YouTube
 
 def download_playlist(uri, target, audio_only, ignore_rgx):
     pl = Playlist(uri)
-    pl._video_regex = re.compile(r"\"url\":\"(/watch\?v=[\w-]*)")
+    pl._video_regex = re.compile(r"\"url\":\"(/watch\?v=[\w-]*)")  # type: ignore
     for link in pl:
         download_video(link, target, audio_only, ignore_rgx)
 
@@ -28,6 +28,7 @@ def download_video(uri, target, audio_only=False, ignore_rgx="(?!)"):
             stream = yt.streams.filter(only_audio=True).order_by("abr").desc().first()
         else:
             stream = yt.streams.get_highest_resolution()
+        assert stream
         stream.download(target, skip_existing=True, max_retries=3)
 
         print(f'"{yt.title}" done.'.ljust(cols))

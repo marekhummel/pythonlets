@@ -21,11 +21,13 @@ pyexiv2 = "^2.12.0"
 pypdf = "^4.2.0"
 simplegmail = "^4.1.1"
 dacite = "^1.8.1"
+pytubefix = "^10.3.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.14.10"
 mypy = "^1.10.0"
 types-requests = "^2.32.0.20241016"
+types-tqdm = "^4.67.0.20250809"
 
 [build-system]
 requires = ["poetry-core"]
@@ -47,3 +49,8 @@ exclude = ["tools/img_dating/*.py"]
 
 [tool.mypy]
 exclude = ["_creds/", "_out/"]
+
+[[tool.mypy.overrides]]
+module = ["musicalbeeps", "pytubefix", "simplegmail.*", "moviepy.*"]
+ignore_errors = true
+ignore_missing_imports = true

@@ -1,13 +1,13 @@
-class BinaryMinHeap:
-    _data: list
+class BinaryMinHeap[T]:
+    _data: list[tuple[int, T]]
 
     def __init__(self) -> None:
         self._data = []
 
-    def get_min(self):
-        return self._data.value[1]
+    def get_min(self) -> T:
+        return self._data[0][1]
 
-    def extract_min(self):
+    def extract_min(self) -> T:
         self._swap(0, len(self._data) - 1)
         result = self._data.pop()
 
@@ -30,11 +30,11 @@ class BinaryMinHeap:
 
         return result[1]
 
-    def insert(self, elem, prio: int) -> None:
+    def insert(self, elem: T, prio: int) -> None:
         self._data.append((prio, elem))
         self._heapify(len(self._data) - 1)
 
-    def decrease_key(self, elem, new_prio):
+    def decrease_key(self, elem: T, new_prio: int):
         for index, val in enumerate(self._data):
             if val[1] == elem:
                 break
@@ -44,16 +44,16 @@ class BinaryMinHeap:
         self._data[index] = (new_prio, self._data[index][1])
         self._heapify(index)
 
-    def _get_parent(self, index) -> int:
+    def _get_parent(self, index: int) -> int:
         return (index - 1) // 2
 
-    def _get_children(self, index) -> tuple[int, int]:
+    def _get_children(self, index: int) -> tuple[int, int]:
         return index * 2 + 1, index * 2 + 2
 
-    def _swap(self, a, b) -> None:
+    def _swap(self, a: int, b: int) -> None:
         self._data[a], self._data[b] = self._data[b], self._data[a]
 
-    def _heapify(self, start) -> None:
+    def _heapify(self, start: int) -> None:
         current = start
         while True:
             parent = self._get_parent(current)
@@ -69,9 +69,9 @@ class BinaryMinHeap:
 
 
 if __name__ == "__main__":
-    h = BinaryMinHeap()
+    h = BinaryMinHeap[str]()
     prio = [1, 3, 4, 5, 4, 6, 6, 8, 5, 7]
-    h._data = [(p, i) for i, p in enumerate(prio)]
+    h._data = [(p, str(i)) for i, p in enumerate(prio)]
 
     print("orig")
     print(h._data)
@@ -82,5 +82,5 @@ if __name__ == "__main__":
     print(h.extract_min())
     print(h._data)
     print("decrease")
-    h.decrease_key(3, 1)
+    h.decrease_key("3", 1)
     print(h._data)

@@ -56,9 +56,9 @@ ax_fB.set_title(r"$f_B(b)$")
 ax_fB.set_xlabel("b")
 
 # Define sliders
-axis_d = plt.axes([0.15, 0.1, 0.65, 0.03])
-axis_sigma = plt.axes([0.15, 0.06, 0.65, 0.03])
-axis_sigma_b = plt.axes([0.15, 0.02, 0.65, 0.03])
+axis_d = plt.axes((0.15, 0.1, 0.65, 0.03))
+axis_sigma = plt.axes((0.15, 0.06, 0.65, 0.03))
+axis_sigma_b = plt.axes((0.15, 0.02, 0.65, 0.03))
 
 slider_d = Slider(axis_d, "d", -5.0, 5.0, valinit=d0)
 slider_sigma = Slider(axis_sigma, "\u03c3 (theta)", 0.1, 2.0, valinit=sigma0)

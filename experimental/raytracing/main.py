@@ -2,7 +2,7 @@
 import ppm
 
 w, h = 256, 256
-image = [[None for _ in range(w)] for _ in range(h)]
+image: list[list[tuple[int, int, int]]] = [[(0, 0, 0) for _ in range(w)] for _ in range(h)]
 
 for j in range(h - 1, -1, -1):
     for i in range(w):

@@ -20,7 +20,10 @@ for i in range(12):
     target = f"{title} - Lektion {i + 1:02d}.mp4"
     print("Merge:", target)
     ffmpeg_merge_video_audio(
-        path + video, path + audio, path + title + "\\Lektionen\\" + target, logger=None
+        path + video,
+        path + audio,
+        path + title + "\\Lektionen\\" + target,
+        logger=None,  # type: ignore
     )
 
 # ------

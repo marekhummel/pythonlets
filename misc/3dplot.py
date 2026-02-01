@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 fig = plt.figure()
-ax = plt.axes(projection="3d")
+ax = fig.add_subplot(111, projection="3d")
 
 
 def f(x, y):
@@ -15,8 +15,6 @@ y = np.linspace(-6, 6, 30)
 X, Y = np.meshgrid(x, y)
 Z = f(X, Y)
 
-fig = plt.figure()
-ax = plt.axes(projection="3d")
 ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap="viridis", edgecolor="none")
 ax.set_title("surface")
 ax.set_xlabel("x")

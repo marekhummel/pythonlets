@@ -1,13 +1,20 @@
 # Fibonacci Heaps
 # https://www.youtube.com/watch?v=6JxvKfSV9Ns
 
-from prio_queue import PriorityQueueBinHeap, PriorityQueueFiboHeap, PriorityQueueNaive
+from prio_queue import (
+    PriorityQueueBinHeap,
+    PriorityQueueFiboHeap,
+    PriorityQueueNaive,
+    PriorityQueueProtocol,
+)
 
-pqh = PriorityQueueBinHeap()
-pqn = PriorityQueueNaive()
-pqf = PriorityQueueFiboHeap()
+pqh = PriorityQueueBinHeap[str]()
+pqn = PriorityQueueNaive[str]()
+pqf = PriorityQueueFiboHeap[str]()
 
-for pq in [pqh, pqn, pqf]:
+pqs: list[PriorityQueueProtocol[str]] = [pqh, pqn, pqf]
+
+for pq in pqs:
     pq.enqueue("x", 1)
     pq.enqueue("b", 5)
     pq.enqueue("a", 7)

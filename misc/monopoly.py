@@ -10,10 +10,12 @@ doubles = 0
 # fmt: off
 dice = [i + j for j in range(1, 7) for i in range(1, 7)]
 communities = [0, 10] + [-1] * 14
-chances = [0, 24, 11, "UTILITY", "RAILROAD", "RAILROAD", -1, "BACK", 10, -1, -1, 5, 39, -1, -1, -1]  # noqa
+chances: list[int | str] = [0, 24, 11, "UTILITY", "RAILROAD", "RAILROAD", -1, "BACK", 10, -1, -1, 5, 39, -1, -1, -1] # noqa
 # fmt: on
 random.shuffle(communities)
 random.shuffle(chances)
+
+card: int | str
 
 for i in range(0, rolls):
     index = random.randint(0, len(dice) - 1)
@@ -36,7 +38,7 @@ for i in range(0, rolls):
         # Chances
         if curr in [7, 22, 36]:
             card = chances.pop(0)
-            if card in [0, 10, 5, 11, 24, 39]:
+            if isinstance(card, int) and card in [0, 10, 5, 11, 24, 39]:
                 curr = card
             elif card == "BACK":
                 curr -= 3

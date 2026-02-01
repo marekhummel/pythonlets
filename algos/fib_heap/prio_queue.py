@@ -1,14 +1,22 @@
+from typing import Protocol
+
 from bin_heap import BinaryMinHeap
 from fib_heap import FiboMinHeap
 
 
-class PriorityQueueBinHeap:
+class PriorityQueueProtocol[T](Protocol):
+    def enqueue(self, elem: T, prio: int) -> None: ...
+    def dequeue(self) -> T | None: ...
+    def update(self, elem: T, new_prio: int) -> None: ...
+
+
+class PriorityQueueBinHeap[T]:
     """
     PQ with heap as backend, yields peek in constant time and
     enqueue / dequeue / update in logarithmic time
     """
 
-    _data: BinaryMinHeap
+    _data: BinaryMinHeap[T]
 
     def __init__(self) -> None:
         self._data = BinaryMinHeap()
@@ -16,27 +24,27 @@ class PriorityQueueBinHeap:
     def empty(self) -> bool:
         return len(self._data._data) == 0
 
-    def front(self):
+    def front(self) -> T:
         return self._data.get_min()
 
-    def update(self, elem, new_prio):
+    def update(self, elem: T, new_prio: int) -> None:
         self._data.decrease_key(elem, new_prio)
 
-    def dequeue(self):
+    def dequeue(self) -> T | None:
         return self._data.extract_min()
 
-    def enqueue(self, elem, prio):
+    def enqueue(self, elem: T, prio: int) -> None:
         self._data.insert(elem, prio)
 
 
-class PriorityQueueFiboHeap:
+class PriorityQueueFiboHeap[T]:
     """
     PQ with heap as backend, yields peek in constant time,
     enqueue and update in  constant time as well and only dequeue
     in logarithmic time (plus constant compared to bin heap)
     """
 
-    _data: FiboMinHeap
+    _data: FiboMinHeap[T]
 
     def __init__(self) -> None:
         self._data = FiboMinHeap()
@@ -44,26 +52,26 @@ class PriorityQueueFiboHeap:
     def empty(self) -> bool:
         return len(self._data._rootlist) == 0
 
-    def front(self):
+    def front(self) -> T | None:
         return self._data.get_min()
 
-    def update(self, elem, new_prio):
+    def update(self, elem: T, new_prio: int) -> None:
         self._data.decrease_key(elem, new_prio)
 
-    def dequeue(self):
+    def dequeue(self) -> T | None:
         return self._data.extract_min()
 
-    def enqueue(self, elem, prio):
+    def enqueue(self, elem: T, prio: int) -> None:
         self._data.insert(elem, prio)
 
 
-class PriorityQueueNaive:
+class PriorityQueueNaive[T]:
     """
     PQ with simple list as PQ, yields peek in constant time, enqueue and
     update in constant time as well, but dequeue in linear time
     """
 
-    _data: list
+    _data: list[tuple[int, T]]
     _front: int
 
     def __init__(self) -> None:
@@ -73,10 +81,10 @@ class PriorityQueueNaive:
     def empty(self) -> bool:
         return len(self._data) == 0
 
-    def front(self):
+    def front(self) -> T | None:
         return self._data[self._front][1] if self._front != -1 else None
 
-    def update(self, elem, new_prio):
+    def update(self, elem: T, new_prio: int) -> None:
         for index, val in enumerate(self._data):
             if val[1] == elem:
                 break
@@ -87,7 +95,7 @@ class PriorityQueueNaive:
         if new_prio < self._data[self._front][0]:
             self._front = index
 
-    def dequeue(self):
+    def dequeue(self) -> T | None:
         if self._front == -1:
             return None
 
@@ -99,7 +107,7 @@ class PriorityQueueNaive:
         self._front = front
         return result
 
-    def enqueue(self, elem, prio):
+    def enqueue(self, elem: T, prio: int) -> None:
         self._data.append((prio, elem))
         if self._front == -1 or self._data[self._front][0] > prio:
             self._front = len(self._data) - 1

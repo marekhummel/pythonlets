@@ -142,6 +142,7 @@ def _trim_image(
     im = Image.open(file)
     dpi = dpi or im.info["dpi"]
 
+    bbox: tuple[int, int, int, int] | None
     if bbox_man:
         width, height = im.size
         left, upper, right, lower = bbox_man
@@ -153,9 +154,9 @@ def _trim_image(
         bbox = diff.getbbox()
 
     if bbox:
-        im = im.crop(bbox)
+        new_im = im.crop(bbox)
         trimmed_file = file.with_stem(f"{file.stem}_trimmed")
-        im.save(trimmed_file, dpi=dpi)
+        new_im.save(trimmed_file, dpi=dpi)
         return trimmed_file
 
     return None

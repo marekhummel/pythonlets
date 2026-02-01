@@ -1,10 +1,10 @@
-from typing import Any, Self
+from typing import Self
 
 
-class Node:
-    def __init__(self, value) -> None:
-        self.value = value
-        self.children: list[Node] = []
+class Node[T]:
+    def __init__(self, value: tuple[int, T]) -> None:
+        self.value: tuple[int, T] = value
+        self.children: list[Node[T]] = []
         self.parent: Self | None = None
         self.marked = False
 
@@ -16,9 +16,9 @@ class Node:
         return len(self.children)
 
 
-class FiboMinHeap:
-    _rootlist: list[Node]
-    _node_lookup: dict[Any, Node]
+class FiboMinHeap[T]:
+    _rootlist: list[Node[T]]
+    _node_lookup: dict[T, Node[T] | None]
     _front: int
 
     def __init__(self) -> None:
@@ -26,10 +26,10 @@ class FiboMinHeap:
         self._node_lookup = {}
         self._front = -1
 
-    def get_min(self):
+    def get_min(self) -> T | None:
         return self._rootlist[self._front].value[1] if self._front != -1 else None
 
-    def extract_min(self):
+    def extract_min(self) -> T | None:
         if self._front == -1:
             return None
 
@@ -40,7 +40,7 @@ class FiboMinHeap:
         min_root.children = []
 
         # Merge, so that each root has a different degree
-        degree_map = [None] * len(self._rootlist)
+        degree_map: list[Node[T] | None] = [None] * len(self._rootlist)
         for root in self._rootlist:
             deg = root.degree()
 
@@ -67,15 +67,17 @@ class FiboMinHeap:
         self._node_lookup[elem] = None
         return elem
 
-    def insert(self, elem, prio: int) -> None:
+    def insert(self, elem: T, prio: int) -> None:
         node = Node((prio, elem))
         if self._node_lookup.get(elem, None) is not None:
             raise ValueError("Element already existing")
         self._node_lookup[elem] = node
         self._extend_nodelist(node)
 
-    def decrease_key(self, elem, new_prio):
+    def decrease_key(self, elem: T, new_prio: int) -> None:
         node = self._node_lookup[elem]
+        if node is None:
+            raise ValueError("Element not found")
         node.value = (new_prio, elem)
 
         cut_out = node
@@ -94,12 +96,12 @@ class FiboMinHeap:
 
             cut_out = parent
 
-    def _extend_nodelist(self, node):
+    def _extend_nodelist(self, node: Node[T]) -> None:
         self._rootlist.append(node)
         if self._front == -1 or node.value[0] < self._rootlist[self._front].value[0]:
             self._front = len(self._rootlist) - 1
 
-    def _merge_nodes(self, node1: Node, node2: Node):
+    def _merge_nodes(self, node1: Node[T], node2: Node[T]) -> Node[T]:
         if node1.value[0] > node2.value[0]:
             node1, node2 = node2, node1
 
@@ -108,18 +110,15 @@ class FiboMinHeap:
 
 
 if __name__ == "__main__":
-    h = FiboMinHeap()
+    h = FiboMinHeap[str]()
     prio = [1, 3, 4, 5, 4, 6, 6, 8, 5, 7]
-    h._data = [(p, i) for i, p in enumerate(prio)]
+    for i, p in enumerate(prio):
+        h.insert(str(i), p)
 
     print("orig")
-    print(h._data)
     print("insert")
     h.insert("x", 2)
-    print(h._data)
     print("extract")
     print(h.extract_min())
-    print(h._data)
     print("decrease")
-    h.decrease_key(3, 1)
-    print(h._data)
+    h.decrease_key("3", 1)

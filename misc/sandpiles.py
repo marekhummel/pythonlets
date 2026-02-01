@@ -1,6 +1,5 @@
 # Numberphile: https://www.youtube.com/watch?v=1MtEUErz7Gg
 # Paper: https://fse.studenttheses.ub.rug.nl/21391/1/bMath_2020_DomanN.pdf
-from typing import Self
 
 
 class Sandpile:
@@ -11,7 +10,7 @@ class Sandpile:
         self.size = size
         self.values = values
 
-    def __add__(self, other) -> Self:
+    def __add__(self, other) -> "Sandpile":
         result = [x + y for x, y in zip(self.values, other.values)]
         while any(x > 3 for x in result):
             result = self._topple(result)

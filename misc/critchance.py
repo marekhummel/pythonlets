@@ -5,7 +5,7 @@ from time import sleep
 getcontext().prec = 3
 
 
-crits = []
+crits: list[bool] = []
 crit_chance = Decimal(1 / 3)
 
 
