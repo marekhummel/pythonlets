@@ -23,4 +23,4 @@ def chudnovsky(prec):
     return 1 / val
 
 
-print(chudnovsky(51))
+print(chudnovsky(501))
