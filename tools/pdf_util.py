@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from pdf2image import convert_from_path  # type: ignore
-from PIL import Image, ImageChops, ImageFile
+from PIL import Image, ImageChops, ImageFile, ImageOps
 from pypdf import PdfReader, PdfWriter
 
 
@@ -81,6 +81,7 @@ def images_to_pdf(root: Path, image_files: list[str], output: str) -> None:
     for image_file in image_files:
         img_path = root / image_file
         img: Image.Image | ImageFile.ImageFile = Image.open(img_path)
+        img = ImageOps.exif_transpose(img)
 
         # new_size = (img.size[0] // 2, img.size[1] // 2)
         # img = img.resize(new_size, Image.Resampling.LANCZOS)
@@ -178,5 +179,13 @@ def _backup_original(file: Path) -> tuple[Path, Path]:
 
 
 if __name__ == "__main__":
-    root = Path(r".\\")
+    root = Path(os.environ["WINHOME"], "OneDrive/Academy/Uni/Bachelor Mathe/Praktikum/Referenzen/")
     # ...
+
+    files = [p.name for p in root.glob("*.jpg")]
+    splits = [1, 9, 19, 25, 37]
+
+    for i, (s, e) in enumerate(zip(splits, splits[1:])):
+        images_to_pdf(root, files[s - 1 : e - 1], f"Referenz {i + 1}.pdf")
+
+    # rotate_pdf(root / "Referenz 2.pdf", 270)
