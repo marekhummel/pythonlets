@@ -5,7 +5,6 @@ from enum import IntEnum
 from math import pow
 from typing import NewType, Self
 
-
 # Definitions
 
 
